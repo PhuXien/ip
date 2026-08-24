@@ -21,6 +21,7 @@ public class Edith {
 
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[MAX_TASKS];
+        boolean[] completedTasks = new boolean[MAX_TASKS];
         int taskCount = 0;
         while (true) {
             String command = scanner.nextLine();
@@ -33,8 +34,25 @@ public class Edith {
             }
 
             if (command.equals("list")) {
+                System.out.println("Here are the tasks in your list:");
                 for (int i = 0; i < taskCount; i++) {
-                    System.out.println((i + 1) + ". " + tasks[i]);
+                    String status = completedTasks[i] ? "[X]" : "[ ]";
+                    System.out.println((i + 1) + "." + status + " " + tasks[i]);
+                }
+            } else if (command.startsWith("mark ")) {
+                String taskNumberText = command.substring("mark ".length()).trim();
+                try {
+                    int taskNumber = Integer.parseInt(taskNumberText);
+                    if (taskNumber < 1 || taskNumber > taskCount) {
+                        System.out.println("Please provide a valid task number.");
+                    } else {
+                        int taskIndex = taskNumber - 1;
+                        completedTasks[taskIndex] = true;
+                        System.out.println("Nice! I've marked this task as done:");
+                        System.out.println("  [X] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please provide a valid task number.");
                 }
             } else if (taskCount < MAX_TASKS) {
                 tasks[taskCount] = command;
