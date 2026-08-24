@@ -54,6 +54,21 @@ public class Edith {
                 } catch (NumberFormatException e) {
                     System.out.println("Please provide a valid task number.");
                 }
+            } else if (command.startsWith("unmark ")) {
+                String taskNumberText = command.substring("unmark ".length()).trim();
+                try {
+                    int taskNumber = Integer.parseInt(taskNumberText);
+                    if (taskNumber < 1 || taskNumber > taskCount) {
+                        System.out.println("Please provide a valid task number.");
+                    } else {
+                        int taskIndex = taskNumber - 1;
+                        completedTasks[taskIndex] = false;
+                        System.out.println("OK, I've marked this task as not done yet:");
+                        System.out.println("  [ ] " + tasks[taskIndex]);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please provide a valid task number.");
+                }
             } else if (taskCount < MAX_TASKS) {
                 tasks[taskCount] = command;
                 taskCount++;
