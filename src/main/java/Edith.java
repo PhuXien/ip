@@ -1,9 +1,10 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /** Entry point for the Edith chatbot. */
 public class Edith {
     private static final String DIVIDER = "____________________________________________________________";
-    private static final int MAX_TASKS = 100;
 
     public static void main(String[] args) {
         String banner = """
@@ -20,8 +21,7 @@ public class Edith {
         System.out.println(DIVIDER);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(DIVIDER);
@@ -34,20 +34,22 @@ public class Edith {
 
             try {
                 if (command.equals("list")) {
-                    printTaskList(tasks, taskCount);
+                    printTaskList(tasks);
                 } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    markTask(tasks, taskCount, command, true);
+                    markTask(tasks, command, true);
                 } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    markTask(tasks, taskCount, command, false);
+                    markTask(tasks, command, false);
+                } else if (command.equals("delete") || command.startsWith("delete ")) {
+                    deleteTask(tasks, command);
                 } else if (command.equals("todo") || command.startsWith("todo ")) {
                     String description = command.substring("todo".length()).trim();
-                    taskCount = addTask(tasks, taskCount, new Todo(description));
+                    addTask(tasks, new Todo(description));
                 } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    taskCount = addDeadline(tasks, taskCount, command);
+                    addDeadline(tasks, command);
                 } else if (command.equals("event") || command.startsWith("event ")) {
-                    taskCount = addEvent(tasks, taskCount, command);
+                    addEvent(tasks, command);
                 } else {
-                    throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, or bye.");
+                    throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.");
                 }
             } catch (EdithException e) {
                 System.out.println("OOPS!!! " + e.getMessage());
@@ -57,38 +59,28 @@ public class Edith {
     }
 
     /**
-     * Adds a task and prints the confirmation message, if the list has space.
+     * Adds a task and prints the confirmation message.
      *
      * @param tasks the task list to update
-     * @param taskCount the number of tasks currently in the list
      * @param task the task to add
-     * @return the updated task count
      */
-    private static int addTask(Task[] tasks, int taskCount, Task task) throws EdithException {
+    private static void addTask(List<Task> tasks, Task task) throws EdithException {
         if (task.getDescription().isEmpty()) {
             throw new EdithException("The description of a " + task.getTaskType() + " cannot be empty.");
         }
-        if (taskCount == MAX_TASKS) {
-            throw new EdithException("I can only store up to " + MAX_TASKS + " tasks. Delete a task before adding another.");
-        }
-
-        tasks[taskCount] = task;
-        taskCount++;
+        tasks.add(task);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /**
      * Parses and adds a deadline command in the form {@code deadline DESCRIPTION /by TIME}.
      *
      * @param tasks the task list to update
-     * @param taskCount the number of tasks currently in the list
      * @param command the user's command
-     * @return the updated task count
      */
-    private static int addDeadline(Task[] tasks, int taskCount, String command) throws EdithException {
+    private static void addDeadline(List<Task> tasks, String command) throws EdithException {
         String details = command.substring("deadline".length()).trim();
         int byMarker = details.indexOf("/by");
         if (byMarker < 0) {
@@ -103,18 +95,16 @@ public class Edith {
         if (by.isEmpty()) {
             throw new EdithException("A deadline needs a due time after /by. Use: deadline DESCRIPTION /by TIME");
         }
-        return addTask(tasks, taskCount, new Deadline(description, by));
+        addTask(tasks, new Deadline(description, by));
     }
 
     /**
      * Parses and adds an event command in the form {@code event DESCRIPTION /from TIME /to TIME}.
      *
      * @param tasks the task list to update
-     * @param taskCount the number of tasks currently in the list
      * @param command the user's command
-     * @return the updated task count
      */
-    private static int addEvent(Task[] tasks, int taskCount, String command) throws EdithException {
+    private static void addEvent(List<Task> tasks, String command) throws EdithException {
         String details = command.substring("event".length()).trim();
         int fromMarker = details.indexOf("/from");
         int toMarker = details.indexOf("/to");
@@ -134,14 +124,14 @@ public class Edith {
         if (to.isEmpty()) {
             throw new EdithException("An event needs an end time after /to. Use: event DESCRIPTION /from START /to END");
         }
-        return addTask(tasks, taskCount, new Event(description, from, to));
+        addTask(tasks, new Event(description, from, to));
     }
 
     /** Prints every task currently stored in the task list. */
-    private static void printTaskList(Task[] tasks, int taskCount) {
+    private static void printTaskList(List<Task> tasks) {
         System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println((i + 1) + "." + tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -149,24 +139,23 @@ public class Edith {
      * Marks the requested task as complete or incomplete.
      *
      * @param tasks the task list
-     * @param taskCount the number of tasks currently stored
      * @param command the user's mark or unmark command
      * @param shouldMarkDone whether to mark the task complete
      * @throws EdithException if the supplied task number is invalid
      */
-    private static void markTask(Task[] tasks, int taskCount, String command, boolean shouldMarkDone)
+    private static void markTask(List<Task> tasks, String command, boolean shouldMarkDone)
             throws EdithException {
         String commandWord = shouldMarkDone ? "mark" : "unmark";
         String taskNumberText = command.substring(commandWord.length()).trim();
         try {
             int taskNumber = Integer.parseInt(taskNumberText);
-            if (taskCount == 0) {
+            if (tasks.isEmpty()) {
                 throw new EdithException("There are no tasks to " + commandWord + ". Add a task first.");
             }
-            if (taskNumber < 1 || taskNumber > taskCount) {
-                throw new EdithException("Please provide a task number from 1 to " + taskCount + ".");
+            if (taskNumber < 1 || taskNumber > tasks.size()) {
+                throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
             }
-            Task task = tasks[taskNumber - 1];
+            Task task = tasks.get(taskNumber - 1);
             if (shouldMarkDone) {
                 task.markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
@@ -177,6 +166,32 @@ public class Edith {
             System.out.println("  " + task);
         } catch (NumberFormatException e) {
             throw new EdithException("Please provide a whole-number task number. Use: " + commandWord + " NUMBER");
+        }
+    }
+
+    /**
+     * Removes the requested task and prints a confirmation message.
+     *
+     * @param tasks the task list to update
+     * @param command the user's delete command
+     * @throws EdithException if the supplied task number is invalid
+     */
+    private static void deleteTask(List<Task> tasks, String command) throws EdithException {
+        String taskNumberText = command.substring("delete".length()).trim();
+        try {
+            int taskNumber = Integer.parseInt(taskNumberText);
+            if (tasks.isEmpty()) {
+                throw new EdithException("There are no tasks to delete. Add a task first.");
+            }
+            if (taskNumber < 1 || taskNumber > tasks.size()) {
+                throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
+            }
+            Task removedTask = tasks.remove(taskNumber - 1);
+            System.out.println("Noted. I've removed this task:");
+            System.out.println("  " + removedTask);
+            System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        } catch (NumberFormatException e) {
+            throw new EdithException("Please provide a whole-number task number. Use: delete NUMBER");
         }
     }
 }
