@@ -1,5 +1,5 @@
 /** Represents a task and whether it has been completed. */
-public class Task {
+public abstract class Task {
     /** The text describing what the user needs to do. */
     private final String description;
 
@@ -40,12 +40,11 @@ public class Task {
     }
 
     /**
-     * Returns this task in the format used by the task list.
+     * Returns the description of this task.
      *
-     * @return the status icon followed by the task description
+     * @return the text describing the task
      */
-    @Override
-    public String toString() {
-        return getStatusIcon() + " " + description;
+    protected String getDescription() {
+        return description;
     }
 }
