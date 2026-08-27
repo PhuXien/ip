@@ -28,4 +28,9 @@ public class Event extends Task {
         return "[E]" + getStatusIcon() + " " + getDescription()
                 + " (from: " + from + " to: " + to + ")";
     }
+
+    @Override
+    protected String getTaskType() {
+        return "event";
+    }
 }

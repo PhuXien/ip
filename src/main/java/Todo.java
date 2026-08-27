@@ -18,4 +18,9 @@ public class Todo extends Task {
     public String toString() {
         return "[T]" + getStatusIcon() + " " + getDescription();
     }
+
+    @Override
+    protected String getTaskType() {
+        return "todo";
+    }
 }

@@ -23,4 +23,9 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + getStatusIcon() + " " + getDescription() + " (by: " + by + ")";
     }
+
+    @Override
+    protected String getTaskType() {
+        return "deadline";
+    }
 }
