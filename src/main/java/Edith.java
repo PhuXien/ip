@@ -26,30 +26,37 @@ public class Edith {
             String command = scanner.nextLine();
             System.out.println(DIVIDER);
 
-            if (command.equals("bye")) {
-                System.out.println("Bye. Hope to see you again soon!");
-                System.out.println(DIVIDER);
-                return;
-            }
-
             try {
-                if (command.equals("list")) {
-                    printTaskList(tasks);
-                } else if (command.equals("mark") || command.startsWith("mark ")) {
-                    markTask(tasks, command, true);
-                } else if (command.equals("unmark") || command.startsWith("unmark ")) {
-                    markTask(tasks, command, false);
-                } else if (command.equals("delete") || command.startsWith("delete ")) {
-                    deleteTask(tasks, command);
-                } else if (command.equals("todo") || command.startsWith("todo ")) {
-                    String description = command.substring("todo".length()).trim();
-                    addTask(tasks, new Todo(description));
-                } else if (command.equals("deadline") || command.startsWith("deadline ")) {
-                    addDeadline(tasks, command);
-                } else if (command.equals("event") || command.startsWith("event ")) {
-                    addEvent(tasks, command);
-                } else {
+                CommandType commandType = CommandType.fromInput(command);
+                if (commandType == null) {
                     throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.");
+                }
+
+                switch (commandType) {
+                case BYE:
+                    System.out.println("Bye. Hope to see you again soon!");
+                    System.out.println(DIVIDER);
+                    return;
+                case LIST:
+                    printTaskList(tasks);
+                    break;
+                case MARK:
+                case UNMARK:
+                    markTask(tasks, command, commandType);
+                    break;
+                case DELETE:
+                    deleteTask(tasks, command);
+                    break;
+                case TODO:
+                    String description = command.substring(commandType.getKeyword().length()).trim();
+                    addTask(tasks, new Todo(description));
+                    break;
+                case DEADLINE:
+                    addDeadline(tasks, command);
+                    break;
+                case EVENT:
+                    addEvent(tasks, command);
+                    break;
                 }
             } catch (EdithException e) {
                 System.out.println("OOPS!!! " + e.getMessage());
@@ -81,7 +88,7 @@ public class Edith {
      * @param command the user's command
      */
     private static void addDeadline(List<Task> tasks, String command) throws EdithException {
-        String details = command.substring("deadline".length()).trim();
+        String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
         int byMarker = details.indexOf("/by");
         if (byMarker < 0) {
             throw new EdithException("A deadline needs a description and a due time. Use: deadline DESCRIPTION /by TIME");
@@ -105,7 +112,7 @@ public class Edith {
      * @param command the user's command
      */
     private static void addEvent(List<Task> tasks, String command) throws EdithException {
-        String details = command.substring("event".length()).trim();
+        String details = command.substring(CommandType.EVENT.getKeyword().length()).trim();
         int fromMarker = details.indexOf("/from");
         int toMarker = details.indexOf("/to");
         if (fromMarker < 0 || toMarker < 0 || toMarker < fromMarker) {
@@ -140,12 +147,15 @@ public class Edith {
      *
      * @param tasks the task list
      * @param command the user's mark or unmark command
-     * @param shouldMarkDone whether to mark the task complete
+     * @param commandType whether to mark the task complete or incomplete
      * @throws EdithException if the supplied task number is invalid
      */
-    private static void markTask(List<Task> tasks, String command, boolean shouldMarkDone)
+    private static void markTask(List<Task> tasks, String command, CommandType commandType)
             throws EdithException {
-        String commandWord = shouldMarkDone ? "mark" : "unmark";
+        boolean shouldMarkDone = commandType == CommandType.MARK;
+        // If input is e.g. mark 1, commandType = CommandType.MARK, the comparison is true; the method calls task.markAsDone() below.
+        // If input is e.g. unmark 1,commandType = CommandType.UNMARK, the comparison is false; the method calls task.markAsNotDone() below.
+        String commandWord = commandType.getKeyword();
         String taskNumberText = command.substring(commandWord.length()).trim();
         try {
             int taskNumber = Integer.parseInt(taskNumberText);
@@ -177,7 +187,7 @@ public class Edith {
      * @throws EdithException if the supplied task number is invalid
      */
     private static void deleteTask(List<Task> tasks, String command) throws EdithException {
-        String taskNumberText = command.substring("delete".length()).trim();
+        String taskNumberText = command.substring(CommandType.DELETE.getKeyword().length()).trim();
         try {
             int taskNumber = Integer.parseInt(taskNumberText);
             if (tasks.isEmpty()) {
