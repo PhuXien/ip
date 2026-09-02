@@ -156,16 +156,51 @@ ____________________________________________________________
 OOPS!!! Please provide a whole-number task number. Use: mark NUMBER
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! There are no tasks to mark. Add a task first.
+Nice! I've marked this task as done:
+  [T][X] read book
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! Please provide a whole-number task number. Use: delete NUMBER
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! There are no tasks to delete. Add a task first.
+Noted. I've removed this task:
+  [T][X] read book
+Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 3: Restore tasks in a new session
+
+Result: **PASS** (exit code 0)
+
+### Console input
+```text
+list
+bye
+```
+
+### Actual console output
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][X] return book (by: June 6th)
+2.[T][X] join sports club
+3.[T][ ] borrow book
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
