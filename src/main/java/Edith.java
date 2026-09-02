@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,7 +22,7 @@ public class Edith {
         System.out.println(DIVIDER);
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        List<Task> tasks = loadTasks();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             System.out.println(DIVIDER);
@@ -76,6 +77,7 @@ public class Edith {
             throw new EdithException("The description of a " + task.getTaskType() + " cannot be empty.");
         }
         tasks.add(task);
+        saveTasks(tasks);
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
@@ -173,6 +175,7 @@ public class Edith {
                 task.markAsNotDone();
                 System.out.println("OK, I've marked this task as not done yet:");
             }
+            saveTasks(tasks);
             System.out.println("  " + task);
         } catch (NumberFormatException e) {
             throw new EdithException("Please provide a whole-number task number. Use: " + commandWord + " NUMBER");
@@ -197,11 +200,31 @@ public class Edith {
                 throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
             }
             Task removedTask = tasks.remove(taskNumber - 1);
+            saveTasks(tasks);
             System.out.println("Noted. I've removed this task:");
             System.out.println("  " + removedTask);
             System.out.println("Now you have " + tasks.size() + " tasks in the list.");
         } catch (NumberFormatException e) {
             throw new EdithException("Please provide a whole-number task number. Use: delete NUMBER");
+        }
+    }
+
+    /** Loads saved tasks, starting with an empty list if the file does not exist or cannot be read. */
+    private static List<Task> loadTasks() {
+        try {
+            return Storage.loadTasks();
+        } catch (IOException e) {
+            System.out.println("OOPS!!! I could not load your saved tasks. Starting with an empty list.");
+            return new ArrayList<>();
+        }
+    }
+
+    /** Saves task changes and converts storage errors into a message suitable for the command loop. */
+    private static void saveTasks(List<Task> tasks) throws EdithException {
+        try {
+            Storage.saveTasks(tasks);
+        } catch (IOException e) {
+            throw new EdithException("I could not save your tasks to disk.");
         }
     }
 }
