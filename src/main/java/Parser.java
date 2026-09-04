@@ -2,33 +2,33 @@ import java.time.format.DateTimeParseException;
 
 /** Interprets user commands and creates the tasks described by them. */
 public class Parser {
-    /** Identifies the command type represented by the complete user input. */
-    public static CommandType parseCommandType(String command) {
-        return CommandType.fromInput(command);
-    }
-
     /**
-     * Creates a command object for command types migrated to the command hierarchy.
+     * Parses complete user input into an executable command.
      *
-     * <p>This temporary migration method returns {@code null} for commands that have not yet been
-     * converted to command objects.</p>
-     *
-     * @param commandType the recognized command type
-     * @return a command object, or {@code null} when that command is not yet converted
+     * @param command the complete user input
+     * @return the command represented by the input
+     * @throws EdithException if the command or its arguments are invalid
      */
-    public static Command parseCommand(String command, CommandType commandType) throws EdithException {
+    public static Command parse(String command) throws EdithException {
+        CommandType commandType = CommandType.fromInput(command);
+        if (commandType == null) {
+            throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.");
+        }
+
         return switch (commandType) {
         case BYE -> new ExitCommand();
         case LIST -> new ListCommand();
         case MARK -> new MarkCommand(parseTaskNumber(command, commandType));
         case UNMARK -> new UnmarkCommand(parseTaskNumber(command, commandType));
         case DELETE -> new DeleteCommand(parseTaskNumber(command, commandType));
-        default -> null;
+        case TODO -> new AddCommand(parseTodo(command));
+        case DEADLINE -> new AddCommand(parseDeadline(command));
+        case EVENT -> new AddCommand(parseEvent(command));
         };
     }
 
     /** Parses a todo command into a task. */
-    public static Task parseTodo(String command) throws EdithException {
+    private static Task parseTodo(String command) throws EdithException {
         String description = command.substring(CommandType.TODO.getKeyword().length()).trim();
         if (description.isEmpty()) {
             throw new EdithException("The description of a todo cannot be empty.");
@@ -37,7 +37,7 @@ public class Parser {
     }
 
     /** Parses a deadline command into a task. */
-    public static Task parseDeadline(String command) throws EdithException {
+    private static Task parseDeadline(String command) throws EdithException {
         String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
         int byMarker = details.indexOf("/by");
         if (byMarker < 0) {
@@ -57,7 +57,7 @@ public class Parser {
     }
 
     /** Parses an event command into a task. */
-    public static Task parseEvent(String command) throws EdithException {
+    private static Task parseEvent(String command) throws EdithException {
         String details = command.substring(CommandType.EVENT.getKeyword().length()).trim();
         int fromMarker = details.indexOf("/from");
         int toMarker = details.indexOf("/to");
@@ -84,7 +84,7 @@ public class Parser {
     }
 
     /** Parses the one-based task number supplied to a mark, unmark, or delete command. */
-    public static int parseTaskNumber(String command, CommandType commandType) throws EdithException {
+    private static int parseTaskNumber(String command, CommandType commandType) throws EdithException {
         String commandWord = commandType.getKeyword();
         String taskNumberText = command.substring(commandWord.length()).trim();
         try {
