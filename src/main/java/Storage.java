@@ -92,21 +92,22 @@ public class Storage {
         return task;
     }
 
-    /** Restores the description and due date from a saved deadline. */
+    /** Restores the description and due date-time from a saved deadline. */
     private static Task parseDeadline(String text, String savedLine) throws IOException {
         int byMarker = text.lastIndexOf(" (by: ");
         if (byMarker < 0 || !text.endsWith(")")) {
             throw new IOException("Invalid saved task: " + savedLine);
         }
         try {
-            return new Deadline(text.substring(0, byMarker),
-                    DateFormatter.parseDisplayedDate(text.substring(byMarker + 6, text.length() - 1)));
+            DateFormatter.ParsedDateTime dueDateTime =
+                    DateFormatter.parseDisplayedDateTime(text.substring(byMarker + 6, text.length() - 1));
+            return new Deadline(text.substring(0, byMarker), dueDateTime.value(), dueDateTime.hasTime());
         } catch (DateTimeParseException e) {
             throw new IOException("Invalid saved task: " + savedLine, e);
         }
     }
 
-    /** Restores the description, start date, and end date from a saved event. */
+    /** Restores the description, start date-time, and end date-time from a saved event. */
     private static Task parseEvent(String text, String savedLine) throws IOException {
         int fromMarker = text.lastIndexOf(" (from: ");
         int toMarker = text.lastIndexOf(" to: ");
@@ -114,9 +115,12 @@ public class Storage {
             throw new IOException("Invalid saved task: " + savedLine);
         }
         try {
-            return new Event(text.substring(0, fromMarker),
-                    DateFormatter.parseDisplayedDate(text.substring(fromMarker + 8, toMarker)),
-                    DateFormatter.parseDisplayedDate(text.substring(toMarker + 5, text.length() - 1)));
+            DateFormatter.ParsedDateTime startDateTime =
+                    DateFormatter.parseDisplayedDateTime(text.substring(fromMarker + 8, toMarker));
+            DateFormatter.ParsedDateTime endDateTime =
+                    DateFormatter.parseDisplayedDateTime(text.substring(toMarker + 5, text.length() - 1));
+            return new Event(text.substring(0, fromMarker), startDateTime.value(), startDateTime.hasTime(),
+                    endDateTime.value(), endDateTime.hasTime());
         } catch (DateTimeParseException e) {
             throw new IOException("Invalid saved task: " + savedLine, e);
         }
