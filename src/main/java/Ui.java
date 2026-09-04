@@ -1,6 +1,24 @@
+import java.util.Scanner;
+
 /** Handles all console input and output for Edith. */
 public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
+    private final Scanner scanner;
+
+    /** Creates a console interface that reads commands from standard input. */
+    public Ui() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    /** Returns whether another command is available to read. */
+    public boolean hasNextCommand() {
+        return scanner.hasNextLine();
+    }
+
+    /** Reads and returns the next complete command entered by the user. */
+    public String readCommand() {
+        return scanner.nextLine();
+    }
 
     /** Displays Edith's welcome message. */
     public void showWelcome() {
