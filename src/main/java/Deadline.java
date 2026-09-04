@@ -1,27 +1,34 @@
-/** Represents a task that must be completed by a specified time. */
+import java.time.LocalDateTime;
+
+/** Represents a task that must be completed by a specified date, optionally with a time. */
 public class Deadline extends Task {
-    /** The deadline text supplied by the user. */
-    private final String by;
+    /** The date and optional time by which this task must be completed. */
+    private final LocalDateTime by;
+    /** Whether the user supplied a time for this deadline. */
+    private final boolean hasTime;
 
     /**
-     * Creates a deadline with its description and due time.
+     * Creates a deadline with its description and due date-time.
      *
      * @param description the text describing the task
-     * @param by the due date or time, stored as text
+     * @param by the due date-time
+     * @param hasTime whether the deadline includes a time
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDateTime by, boolean hasTime) {
         super(description);
         this.by = by;
+        this.hasTime = hasTime;
     }
 
     /**
      * Returns this deadline in the format used by the task list.
      *
-     * @return the deadline type, status icon, description, and due time
+     * @return the deadline type, status icon, description, and due date-time
      */
     @Override
     public String toString() {
-        return "[D]" + getStatusIcon() + " " + getDescription() + " (by: " + by + ")";
+        return "[D]" + getStatusIcon() + " " + getDescription()
+                + " (by: " + DateFormatter.formatForDisplay(by, hasTime) + ")";
     }
 
     @Override

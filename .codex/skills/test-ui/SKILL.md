@@ -16,10 +16,11 @@ Add or revise cases before running them when the requested behavior changes. Exp
 ## Run the tests
 
 1. Compile the project using Java 25, if the plan's run command needs compilation.
-2. Run `scripts/run-ui-tests.ps1` from the repository root. Pass `-Plan` if the plan is not at its default location.
-3. Present the generated `test/ui-test-session.md` in the response. It records every test session's console input and output.
+2. Read each test case's `Inputs` and `Expected output` blocks. Invoke the command from `test-ui-run` directly in a temporary working directory, sending the complete Inputs block through standard input. Use one new process per test case; retain that temporary directory between cases only when the plan explicitly requires persistence.
+3. Compare the captured output with the Expected output exactly after normalizing line endings. On the first mismatch, write `test/ui-test-session.md` with the test's input, expected output, and actual output; report the mismatch and do not run later cases.
+4. If every case passes, write `test/ui-test-session.md` with every test case's input and its captured actual output. Present that file in the response.
 
-The runner compares normalized line endings but otherwise compares output exactly. It creates a new process for each case. On a failure, it immediately stops, writes the transcript with the expected and actual output, and exits unsuccessfully. Report both outputs and do not run later cases.
+The transcript must reflect actual captured program output, not copied expectations. Do not use a project runner script; execute the program command directly.
 
 ## Plan format
 
