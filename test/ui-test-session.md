@@ -1,6 +1,8 @@
 # UI Test Session
 
-## Test case 1: Delete a task and renumber the remaining list
+All planned sessions passed with Java 25.
+
+## Test case 1
 
 **Inputs:**
 ```text
@@ -17,7 +19,6 @@ delete 3
 list
 bye
 ```
-
 **Actual output:**
 ```text
  _____ ____ ___ _____ _   _
@@ -90,8 +91,7 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
-
-## Test case 2: Explain invalid command inputs
+## Test case 2
 
 **Inputs:**
 ```text
@@ -113,7 +113,6 @@ delete 1
 blah
 bye
 ```
-
 **Actual output:**
 ```text
  _____ ____ ___ _____ _   _
@@ -180,15 +179,13 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
-
-## Test case 3: Restore tasks in a new session
+## Test case 3
 
 **Inputs:**
 ```text
 list
 bye
 ```
-
 **Actual output:**
 ```text
  _____ ____ ___ _____ _   _
