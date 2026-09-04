@@ -8,7 +8,7 @@ public class Parser {
     }
 
     /**
-     * Creates a command object for commands that do not require arguments.
+     * Creates a command object for command types migrated to the command hierarchy.
      *
      * <p>This temporary migration method returns {@code null} for commands that have not yet been
      * converted to command objects.</p>
@@ -16,10 +16,13 @@ public class Parser {
      * @param commandType the recognized command type
      * @return a command object, or {@code null} when that command is not yet converted
      */
-    public static Command parseSimpleCommand(CommandType commandType) {
+    public static Command parseCommand(String command, CommandType commandType) throws EdithException {
         return switch (commandType) {
         case BYE -> new ExitCommand();
         case LIST -> new ListCommand();
+        case MARK -> new MarkCommand(parseTaskNumber(command, commandType));
+        case UNMARK -> new UnmarkCommand(parseTaskNumber(command, commandType));
+        case DELETE -> new DeleteCommand(parseTaskNumber(command, commandType));
         default -> null;
         };
     }

@@ -18,7 +18,7 @@ public class Edith {
                     throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.");
                 }
 
-                Command parsedCommand = Parser.parseSimpleCommand(commandType);
+                Command parsedCommand = Parser.parseCommand(command, commandType);
                 if (parsedCommand != null) {
                     parsedCommand.execute(tasks, ui);
                     if (parsedCommand.isExit()) {
@@ -30,13 +30,6 @@ public class Edith {
                 }
 
                 switch (commandType) {
-                case MARK:
-                case UNMARK:
-                    markTask(tasks, command, commandType, ui);
-                    break;
-                case DELETE:
-                    deleteTask(tasks, command, ui);
-                    break;
                 case TODO:
                     addTask(tasks, Parser.parseTodo(command), ui);
                     break;
@@ -70,57 +63,6 @@ public class Edith {
         tasks.add(task);
         saveTasks(tasks);
         ui.showTaskAdded(task, tasks.size());
-    }
-
-    /**
-     * Marks the requested task as complete or incomplete.
-     *
-     * @param tasks the task list
-     * @param command the user's mark or unmark command
-     * @param commandType whether to mark the task complete or incomplete
-     * @param ui the user interface used to show the confirmation
-     * @throws EdithException if the supplied task number is invalid
-     */
-    private static void markTask(TaskList tasks, String command, CommandType commandType, Ui ui)
-            throws EdithException {
-        boolean shouldMarkDone = commandType == CommandType.MARK;
-        String commandWord = commandType.getKeyword();
-        int taskNumber = Parser.parseTaskNumber(command, commandType);
-        if (tasks.isEmpty()) {
-            throw new EdithException("There are no tasks to " + commandWord + ". Add a task first.");
-        }
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
-        }
-        Task task = tasks.get(taskNumber - 1);
-        if (shouldMarkDone) {
-            task.markAsDone();
-        } else {
-            task.markAsNotDone();
-        }
-        saveTasks(tasks);
-        ui.showTaskMarked(task, shouldMarkDone);
-    }
-
-    /**
-     * Removes the requested task and prints a confirmation message.
-     *
-     * @param tasks the task list to update
-     * @param command the user's delete command
-     * @param ui the user interface used to show the confirmation
-     * @throws EdithException if the supplied task number is invalid
-     */
-    private static void deleteTask(TaskList tasks, String command, Ui ui) throws EdithException {
-        int taskNumber = Parser.parseTaskNumber(command, CommandType.DELETE);
-        if (tasks.isEmpty()) {
-            throw new EdithException("There are no tasks to delete. Add a task first.");
-        }
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
-        }
-        Task removedTask = tasks.remove(taskNumber - 1);
-        saveTasks(tasks);
-        ui.showTaskDeleted(removedTask, tasks.size());
     }
 
     /**

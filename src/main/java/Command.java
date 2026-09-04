@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 /** Represents an executable instruction understood by Edith. */
 public abstract class Command {
     /**
@@ -16,5 +18,14 @@ public abstract class Command {
      */
     public boolean isExit() {
         return false;
+    }
+
+    /** Saves task changes and translates storage failures into a user-facing application error. */
+    protected void saveTasks(TaskList tasks) throws EdithException {
+        try {
+            Storage.saveTasks(tasks.asList());
+        } catch (IOException e) {
+            throw new EdithException("I could not save your tasks to disk.");
+        }
     }
 }
