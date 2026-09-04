@@ -1,8 +1,24 @@
-import java.util.List;
+import java.util.Scanner;
 
 /** Handles all console input and output for Edith. */
 public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
+    private final Scanner scanner;
+
+    /** Creates a console interface that reads commands from standard input. */
+    public Ui() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    /** Returns whether another command is available to read. */
+    public boolean hasNextCommand() {
+        return scanner.hasNextLine();
+    }
+
+    /** Reads and returns the next complete command entered by the user. */
+    public String readCommand() {
+        return scanner.nextLine();
+    }
 
     /** Displays Edith's welcome message. */
     public void showWelcome() {
@@ -40,7 +56,7 @@ public class Ui {
     }
 
     /** Displays every task currently stored in the task list. */
-    public void showTaskList(List<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));

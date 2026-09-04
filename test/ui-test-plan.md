@@ -220,3 +220,40 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case 4: Mark a restored task as incomplete
+
+**Aim:** Verify that unmarking updates a restored task, saves it, and displays its new status.
+
+**Inputs:**
+```text
+unmark 1
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OK, I've marked this task as not done yet:
+  [D][ ] return book (by: Dec 02 2019 18:00)
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
