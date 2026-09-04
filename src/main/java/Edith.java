@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -84,7 +86,7 @@ public class Edith {
     }
 
     /**
-     * Parses and adds a deadline command in the form {@code deadline DESCRIPTION /by TIME}.
+     * Parses and adds a deadline command in the form {@code deadline DESCRIPTION /by yyyy-MM-dd}.
      *
      * @param tasks the task list to update
      * @param command the user's command
@@ -93,22 +95,22 @@ public class Edith {
         String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
         int byMarker = details.indexOf("/by");
         if (byMarker < 0) {
-            throw new EdithException("A deadline needs a description and a due time. Use: deadline DESCRIPTION /by TIME");
+            throw new EdithException("A deadline needs a description and due date. Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
 
         String description = details.substring(0, byMarker).trim();
         String by = details.substring(byMarker + "/by".length()).trim();
         if (description.isEmpty()) {
-            throw new EdithException("The description of a deadline cannot be empty. Use: deadline DESCRIPTION /by TIME");
+            throw new EdithException("The description of a deadline cannot be empty. Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
         if (by.isEmpty()) {
-            throw new EdithException("A deadline needs a due time after /by. Use: deadline DESCRIPTION /by TIME");
+            throw new EdithException("A deadline needs a due date after /by. Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
-        addTask(tasks, new Deadline(description, by));
+        addTask(tasks, new Deadline(description, parseDate(by, "deadline")));
     }
 
     /**
-     * Parses and adds an event command in the form {@code event DESCRIPTION /from TIME /to TIME}.
+     * Parses and adds an event command in the form {@code event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd}.
      *
      * @param tasks the task list to update
      * @param command the user's command
@@ -118,22 +120,38 @@ public class Edith {
         int fromMarker = details.indexOf("/from");
         int toMarker = details.indexOf("/to");
         if (fromMarker < 0 || toMarker < 0 || toMarker < fromMarker) {
-            throw new EdithException("An event needs a description, start time, and end time. Use: event DESCRIPTION /from START /to END");
+            throw new EdithException("An event needs a description, start date, and end date. Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
 
         String description = details.substring(0, fromMarker).trim();
         String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
         String to = details.substring(toMarker + "/to".length()).trim();
         if (description.isEmpty()) {
-            throw new EdithException("The description of an event cannot be empty. Use: event DESCRIPTION /from START /to END");
+            throw new EdithException("The description of an event cannot be empty. Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
         if (from.isEmpty()) {
-            throw new EdithException("An event needs a start time after /from. Use: event DESCRIPTION /from START /to END");
+            throw new EdithException("An event needs a start date after /from. Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
         if (to.isEmpty()) {
-            throw new EdithException("An event needs an end time after /to. Use: event DESCRIPTION /from START /to END");
+            throw new EdithException("An event needs an end date after /to. Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
-        addTask(tasks, new Event(description, from, to));
+        addTask(tasks, new Event(description, parseDate(from, "event start"), parseDate(to, "event end")));
+    }
+
+    /**
+     * Parses a command date and gives the user a corrective message when it is invalid.
+     *
+     * @param dateText the date supplied by the user
+     * @param dateRole the role of the date in the command
+     * @return the parsed date
+     * @throws EdithException if the date is not in the required ISO format
+     */
+    private static LocalDate parseDate(String dateText, String dateRole) throws EdithException {
+        try {
+            return DateFormatter.parseInput(dateText);
+        } catch (DateTimeParseException e) {
+            throw new EdithException("The " + dateRole + " date must use yyyy-MM-dd.");
+        }
     }
 
     /** Prints every task currently stored in the task list. */
