@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import java.util.Scanner;
 
 /** Entry point for the Edith chatbot. */
@@ -9,7 +8,7 @@ public class Edith {
         Ui ui = new Ui();
         ui.showWelcome();
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = loadTasks(ui);
+        TaskList tasks = loadTasks(ui);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             ui.showDivider();
@@ -60,7 +59,7 @@ public class Edith {
      * @param task the task to add
      * @param ui the user interface used to show the confirmation
      */
-    private static void addTask(List<Task> tasks, Task task, Ui ui) throws EdithException {
+    private static void addTask(TaskList tasks, Task task, Ui ui) throws EdithException {
         if (task.getDescription().isEmpty()) {
             throw new EdithException("The description of a " + task.getTaskType() + " cannot be empty.");
         }
@@ -76,7 +75,7 @@ public class Edith {
      * @param command the user's command
      * @param ui the user interface used to show the confirmation
      */
-    private static void addDeadline(List<Task> tasks, String command, Ui ui) throws EdithException {
+    private static void addDeadline(TaskList tasks, String command, Ui ui) throws EdithException {
         String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
         int byMarker = details.indexOf("/by");
         if (byMarker < 0) {
@@ -102,7 +101,7 @@ public class Edith {
      * @param command the user's command
      * @param ui the user interface used to show the confirmation
      */
-    private static void addEvent(List<Task> tasks, String command, Ui ui) throws EdithException {
+    private static void addEvent(TaskList tasks, String command, Ui ui) throws EdithException {
         String details = command.substring(CommandType.EVENT.getKeyword().length()).trim();
         int fromMarker = details.indexOf("/from");
         int toMarker = details.indexOf("/to");
@@ -154,7 +153,7 @@ public class Edith {
      * @param ui the user interface used to show the confirmation
      * @throws EdithException if the supplied task number is invalid
      */
-    private static void markTask(List<Task> tasks, String command, CommandType commandType, Ui ui)
+    private static void markTask(TaskList tasks, String command, CommandType commandType, Ui ui)
             throws EdithException {
         boolean shouldMarkDone = commandType == CommandType.MARK;
         // If input is e.g. mark 1, commandType = CommandType.MARK, the comparison is true; the method calls task.markAsDone() below.
@@ -190,7 +189,7 @@ public class Edith {
      * @param ui the user interface used to show the confirmation
      * @throws EdithException if the supplied task number is invalid
      */
-    private static void deleteTask(List<Task> tasks, String command, Ui ui) throws EdithException {
+    private static void deleteTask(TaskList tasks, String command, Ui ui) throws EdithException {
         String taskNumberText = command.substring(CommandType.DELETE.getKeyword().length()).trim();
         try {
             int taskNumber = Integer.parseInt(taskNumberText);
@@ -214,19 +213,19 @@ public class Edith {
      * @param ui the user interface used to show a loading error
      * @return the restored tasks, or an empty list after a loading error
      */
-    private static List<Task> loadTasks(Ui ui) {
+    private static TaskList loadTasks(Ui ui) {
         try {
-            return Storage.loadTasks();
+            return new TaskList(Storage.loadTasks());
         } catch (IOException e) {
             ui.showLoadingError();
-            return new java.util.ArrayList<>();
+            return new TaskList();
         }
     }
 
     /** Saves task changes and converts storage errors into a message suitable for the command loop. */
-    private static void saveTasks(List<Task> tasks) throws EdithException {
+    private static void saveTasks(TaskList tasks) throws EdithException {
         try {
-            Storage.saveTasks(tasks);
+            Storage.saveTasks(tasks.asList());
         } catch (IOException e) {
             throw new EdithException("I could not save your tasks to disk.");
         }

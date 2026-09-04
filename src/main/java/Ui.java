@@ -1,5 +1,3 @@
-import java.util.List;
-
 /** Handles all console input and output for Edith. */
 public class Ui {
     private static final String DIVIDER = "____________________________________________________________";
@@ -40,7 +38,7 @@ public class Ui {
     }
 
     /** Displays every task currently stored in the task list. */
-    public void showTaskList(List<Task> tasks) {
+    public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
