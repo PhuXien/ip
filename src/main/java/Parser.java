@@ -7,6 +7,23 @@ public class Parser {
         return CommandType.fromInput(command);
     }
 
+    /**
+     * Creates a command object for commands that do not require arguments.
+     *
+     * <p>This temporary migration method returns {@code null} for commands that have not yet been
+     * converted to command objects.</p>
+     *
+     * @param commandType the recognized command type
+     * @return a command object, or {@code null} when that command is not yet converted
+     */
+    public static Command parseSimpleCommand(CommandType commandType) {
+        return switch (commandType) {
+        case BYE -> new ExitCommand();
+        case LIST -> new ListCommand();
+        default -> null;
+        };
+    }
+
     /** Parses a todo command into a task. */
     public static Task parseTodo(String command) throws EdithException {
         String description = command.substring(CommandType.TODO.getKeyword().length()).trim();

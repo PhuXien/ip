@@ -18,14 +18,18 @@ public class Edith {
                     throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.");
                 }
 
-                switch (commandType) {
-                case BYE:
-                    ui.showGoodbye();
+                Command parsedCommand = Parser.parseSimpleCommand(commandType);
+                if (parsedCommand != null) {
+                    parsedCommand.execute(tasks, ui);
+                    if (parsedCommand.isExit()) {
+                        ui.showDivider();
+                        return;
+                    }
                     ui.showDivider();
-                    return;
-                case LIST:
-                    ui.showTaskList(tasks);
-                    break;
+                    continue;
+                }
+
+                switch (commandType) {
                 case MARK:
                 case UNMARK:
                     markTask(tasks, command, commandType, ui);
@@ -42,6 +46,8 @@ public class Edith {
                 case EVENT:
                     addTask(tasks, Parser.parseEvent(command), ui);
                     break;
+                default:
+                    throw new IllegalStateException("Command should already have been handled: " + commandType);
                 }
             } catch (EdithException e) {
                 ui.showError(e);
