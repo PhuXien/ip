@@ -40,7 +40,11 @@ public class Edith {
         }
     }
 
-    /** Starts Edith using its default console and storage configuration. */
+    /**
+     * Starts Edith using its default console and storage configuration.
+     *
+     * @param args command-line arguments, which Edith does not use
+     */
     public static void main(String[] args) {
         new Edith().run();
     }

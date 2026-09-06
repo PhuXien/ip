@@ -2,13 +2,21 @@ package edith.parser;
 
 /** Represents the commands understood by Edith. */
 public enum CommandType {
+    /** Adds a task without a date or time. */
     TODO("todo", true),
+    /** Adds a task with a due date and optional time. */
     DEADLINE("deadline", true),
+    /** Adds a task with start and end dates and optional times. */
     EVENT("event", true),
+    /** Displays the current task list. */
     LIST("list", false),
+    /** Marks a task as completed. */
     MARK("mark", true),
+    /** Marks a task as incomplete. */
     UNMARK("unmark", true),
+    /** Removes a task from the task list. */
     DELETE("delete", true),
+    /** Ends the current Edith session. */
     BYE("bye", false);
 
     private final String keyword;

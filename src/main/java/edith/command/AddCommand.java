@@ -18,6 +18,13 @@ public class AddCommand extends Command {
         this.task = task;
     }
 
+    /**
+     * Adds the task, saves the updated list, and displays a confirmation.
+     *
+     * @param tasks the task list to which the task is added
+     * @param ui the user interface used to display the confirmation
+     * @throws EdithException if the updated task list cannot be saved
+     */
     @Override
     public void execute(TaskList tasks, Ui ui) throws EdithException {
         tasks.add(task);

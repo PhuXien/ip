@@ -27,7 +27,12 @@ public abstract class Command {
         return false;
     }
 
-    /** Saves task changes and translates storage failures into a user-facing application error. */
+    /**
+     * Saves task changes and translates storage failures into a user-facing application error.
+     *
+     * @param tasks the task list to save
+     * @throws EdithException if the task list cannot be saved
+     */
     protected void saveTasks(TaskList tasks) throws EdithException {
         try {
             Storage.saveTasks(tasks.asList());

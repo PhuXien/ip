@@ -21,27 +21,49 @@ public class TaskList {
         this.tasks = new ArrayList<>(tasks);
     }
 
-    /** Adds a task to the end of the list. */
+    /**
+     * Adds a task to the end of the list.
+     *
+     * @param task the task to add
+     */
     public void add(Task task) {
         tasks.add(task);
     }
 
-    /** Returns the task at the given zero-based index. */
+    /**
+     * Returns the task at the given zero-based index.
+     *
+     * @param index the zero-based position of the task
+     * @return the task at the specified position
+     */
     public Task get(int index) {
         return tasks.get(index);
     }
 
-    /** Removes and returns the task at the given zero-based index. */
+    /**
+     * Removes and returns the task at the given zero-based index.
+     *
+     * @param index the zero-based position of the task
+     * @return the task removed from the specified position
+     */
     public Task remove(int index) {
         return tasks.remove(index);
     }
 
-    /** Returns the number of tasks in the list. */
+    /**
+     * Returns the number of tasks in the list.
+     *
+     * @return the number of tasks
+     */
     public int size() {
         return tasks.size();
     }
 
-    /** Returns whether the list contains no tasks. */
+    /**
+     * Returns whether the list contains no tasks.
+     *
+     * @return {@code true} if the list is empty
+     */
     public boolean isEmpty() {
         return tasks.isEmpty();
     }

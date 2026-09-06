@@ -9,11 +9,22 @@ import edith.ui.Ui;
 public class MarkCommand extends Command {
     private final int taskNumber;
 
-    /** Creates a command targeting the supplied one-based task number. */
+    /**
+     * Creates a command targeting the supplied one-based task number.
+     *
+     * @param taskNumber the one-based position of the task to mark as completed
+     */
     public MarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Marks the selected task as completed, saves the updated list, and displays a confirmation.
+     *
+     * @param tasks the task list containing the task to mark
+     * @param ui the user interface used to display the confirmation
+     * @throws EdithException if the list is empty, the task number is invalid, or the list cannot be saved
+     */
     @Override
     public void execute(TaskList tasks, Ui ui) throws EdithException {
         if (tasks.isEmpty()) {

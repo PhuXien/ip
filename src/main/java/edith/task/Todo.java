@@ -21,6 +21,11 @@ public class Todo extends Task {
         return "[T]" + getStatusIcon() + " " + getDescription();
     }
 
+    /**
+     * Returns the identifier for a todo task.
+     *
+     * @return {@code todo}
+     */
     @Override
     protected String getTaskType() {
         return "todo";

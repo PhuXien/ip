@@ -16,12 +16,20 @@ public class Ui {
         this.scanner = new Scanner(System.in);
     }
 
-    /** Returns whether another command is available to read. */
+    /**
+     * Returns whether another command is available to read.
+     *
+     * @return {@code true} if standard input has another line
+     */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
     }
 
-    /** Reads and returns the next complete command entered by the user. */
+    /**
+     * Reads and returns the next complete command entered by the user.
+     *
+     * @return the next line from standard input
+     */
     public String readCommand() {
         return scanner.nextLine();
     }
@@ -51,7 +59,11 @@ public class Ui {
         System.out.println("Bye. Hope to see you again soon!");
     }
 
-    /** Displays a user-correctable error. */
+    /**
+     * Displays an application error to the user.
+     *
+     * @param exception the error containing the message to display
+     */
     public void showError(EdithException exception) {
         System.out.println("OOPS!!! " + exception.getMessage());
     }
@@ -61,7 +73,11 @@ public class Ui {
         System.out.println("OOPS!!! I could not load your saved tasks. Starting with an empty list.");
     }
 
-    /** Displays every task currently stored in the task list. */
+    /**
+     * Displays every task currently stored in the task list.
+     *
+     * @param tasks the task list to display
+     */
     public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
@@ -69,14 +85,24 @@ public class Ui {
         }
     }
 
-    /** Displays confirmation that a task was added. */
+    /**
+     * Displays confirmation that a task was added.
+     *
+     * @param task the task that was added
+     * @param taskCount the number of tasks after the addition
+     */
     public void showTaskAdded(Task task, int taskCount) {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
     }
 
-    /** Displays confirmation that a task's completion state changed. */
+    /**
+     * Displays confirmation that a task's completion state changed.
+     *
+     * @param task the task whose completion state changed
+     * @param isDone whether the task is now completed
+     */
     public void showTaskMarked(Task task, boolean isDone) {
         if (isDone) {
             System.out.println("Nice! I've marked this task as done:");
@@ -86,7 +112,12 @@ public class Ui {
         System.out.println("  " + task);
     }
 
-    /** Displays confirmation that a task was removed. */
+    /**
+     * Displays confirmation that a task was removed.
+     *
+     * @param task the task that was removed
+     * @param taskCount the number of tasks after the removal
+     */
     public void showTaskDeleted(Task task, int taskCount) {
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + task);

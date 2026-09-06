@@ -44,6 +44,11 @@ public class Event extends Task {
                 + " to: " + DateFormatter.formatForDisplay(to, toHasTime) + ")";
     }
 
+    /**
+     * Returns the identifier for an event task.
+     *
+     * @return {@code event}
+     */
     @Override
     protected String getTaskType() {
         return "event";
