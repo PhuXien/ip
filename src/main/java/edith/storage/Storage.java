@@ -29,12 +29,17 @@ public class Storage {
      * @throws IOException if the data file cannot be read or has an invalid task line
      */
     public static List<Task> loadTasks() throws IOException {
+        return loadTasks(DATA_FILE);
+    }
+
+    /** Loads tasks from the supplied file, allowing persistence logic to be tested safely. */
+    static List<Task> loadTasks(Path dataFile) throws IOException {
         List<Task> tasks = new ArrayList<>();
-        if (!Files.exists(DATA_FILE)) {
+        if (!Files.exists(dataFile)) {
             return tasks;
         }
 
-        for (String line : Files.readAllLines(DATA_FILE, StandardCharsets.UTF_8)) {
+        for (String line : Files.readAllLines(dataFile, StandardCharsets.UTF_8)) {
             if (!line.isBlank() && !line.equals(LIST_HEADING)) {
                 tasks.add(parseTask(line));
             }
@@ -49,13 +54,18 @@ public class Storage {
      * @throws IOException if the data directory or file cannot be written
      */
     public static void saveTasks(List<Task> tasks) throws IOException {
-        Files.createDirectories(DATA_FILE.getParent());
+        saveTasks(tasks, DATA_FILE);
+    }
+
+    /** Saves tasks to the supplied file, allowing persistence logic to be tested safely. */
+    static void saveTasks(List<Task> tasks, Path dataFile) throws IOException {
+        Files.createDirectories(dataFile.getParent());
         List<String> lines = new ArrayList<>();
         lines.add(LIST_HEADING);
         for (int i = 0; i < tasks.size(); i++) {
             lines.add((i + 1) + "." + tasks.get(i));
         }
-        Files.write(DATA_FILE, lines, StandardCharsets.UTF_8);
+        Files.write(dataFile, lines, StandardCharsets.UTF_8);
     }
 
     /**

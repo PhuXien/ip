@@ -28,6 +28,12 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## JUnit test maintenance
+
+Maintain JUnit tests for approximately the top 50% highest-value methods across all classes. Prioritize complex methods, core business logic, critical workflows, boundary conditions, and error handling; do not add tests solely to cover trivial constructors, getters, setters, or simple delegation.
+
+After every code update, review and update the JUnit tests so that new or changed behaviour continues to comply with this coverage target. Run the complete JUnit test suite before reporting the code update as complete.
+
 ## UI test maintenance
 
 After every code update, review `test/ui-test-plan.md` and update its test cases when the changed behaviour, commands, or console output require it. Then invoke the project-specific `$test-ui` skill to compile and run the planned console UI tests. Do this before reporting the code update as complete.
