@@ -1,3 +1,8 @@
+package edith.command;
+
+import edith.task.TaskList;
+import edith.ui.Ui;
+
 /** Ends the current Edith session. */
 public class ExitCommand extends Command {
     @Override

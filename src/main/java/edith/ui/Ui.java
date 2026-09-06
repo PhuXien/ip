@@ -1,4 +1,10 @@
+package edith.ui;
+
 import java.util.Scanner;
+
+import edith.exception.EdithException;
+import edith.task.Task;
+import edith.task.TaskList;
 
 /** Handles all console input and output for Edith. */
 public class Ui {

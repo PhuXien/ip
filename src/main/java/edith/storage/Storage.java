@@ -1,3 +1,5 @@
+package edith.storage;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -5,6 +7,12 @@ import java.nio.file.Path;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import edith.task.Deadline;
+import edith.task.Event;
+import edith.task.Task;
+import edith.task.Todo;
+import edith.util.DateFormatter;
 
 /** Saves tasks to, and restores tasks from, Edith's project-relative data file. */
 public class Storage {

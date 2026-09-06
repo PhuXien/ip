@@ -1,3 +1,5 @@
+package edith.task;
+
 /** Represents a task and whether it has been completed. */
 public abstract class Task {
     /** The text describing what the user needs to do. */

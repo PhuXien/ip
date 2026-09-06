@@ -1,4 +1,13 @@
+package edith;
+
 import java.io.IOException;
+
+import edith.command.Command;
+import edith.exception.EdithException;
+import edith.parser.Parser;
+import edith.storage.Storage;
+import edith.task.TaskList;
+import edith.ui.Ui;
 
 /** Entry point for the Edith chatbot. */
 public class Edith {

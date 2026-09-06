@@ -1,3 +1,5 @@
+package edith.parser;
+
 /** Represents the commands understood by Edith. */
 public enum CommandType {
     TODO("todo", true),

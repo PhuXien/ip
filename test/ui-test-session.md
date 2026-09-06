@@ -1,6 +1,6 @@
 # UI Test Session
 
-All planned sessions passed with Java 25.
+All planned sessions passed with Java 25 after the package reorganization.
 
 ## Test case 1
 

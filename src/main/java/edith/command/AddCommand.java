@@ -1,3 +1,10 @@
+package edith.command;
+
+import edith.exception.EdithException;
+import edith.task.Task;
+import edith.task.TaskList;
+import edith.ui.Ui;
+
 /** Adds one parsed task to Edith's task list. */
 public class AddCommand extends Command {
     private final Task task;

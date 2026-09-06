@@ -1,4 +1,8 @@
+package edith.task;
+
 import java.time.LocalDateTime;
+
+import edith.util.DateFormatter;
 
 /** Represents a task with start and end dates, each optionally with a time. */
 public class Event extends Task {

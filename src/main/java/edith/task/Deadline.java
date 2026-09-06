@@ -1,4 +1,8 @@
+package edith.task;
+
 import java.time.LocalDateTime;
+
+import edith.util.DateFormatter;
 
 /** Represents a task that must be completed by a specified date, optionally with a time. */
 public class Deadline extends Task {

@@ -1,3 +1,5 @@
+package edith.exception;
+
 /** Represents an error caused by invalid input to the Edith chatbot. */
 public class EdithException extends Exception {
     /**

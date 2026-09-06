@@ -1,4 +1,11 @@
+package edith.command;
+
 import java.io.IOException;
+
+import edith.exception.EdithException;
+import edith.storage.Storage;
+import edith.task.TaskList;
+import edith.ui.Ui;
 
 /** Represents an executable instruction understood by Edith. */
 public abstract class Command {
