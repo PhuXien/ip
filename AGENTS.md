@@ -48,6 +48,11 @@ If a UI test fails, stop the test session immediately as required by the skill, 
 
 ## Git
 
+Before proposing or creating any commit in this project, load and follow the
+project-specific `seedu-git-standard` skill in
+`.codex/skills/seedu-git-standard/`. Ensure every commit message complies with
+that standard.
+
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
