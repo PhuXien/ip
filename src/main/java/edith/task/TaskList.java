@@ -2,6 +2,7 @@ package edith.task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /** Maintains Edith's ordered collection of tasks. */
 public class TaskList {
@@ -44,6 +45,20 @@ public class TaskList {
     /** Returns whether the list contains no tasks. */
     public boolean isEmpty() {
         return tasks.isEmpty();
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the supplied search text, ignoring letter case.
+     *
+     * @param keyword the word or phrase to search for
+     * @return matching tasks in their original list order
+     */
+    public TaskList find(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        List<Task> matches = tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .toList();
+        return new TaskList(matches);
     }
 
     /**

@@ -64,6 +64,17 @@ public class Ui {
     /** Displays every task currently stored in the task list. */
     public void showTaskList(TaskList tasks) {
         System.out.println("Here are the tasks in your list:");
+        showNumberedTasks(tasks);
+    }
+
+    /** Displays the tasks that match a find command. */
+    public void showMatchingTasks(TaskList tasks) {
+        System.out.println("Here are the matching tasks in your list:");
+        showNumberedTasks(tasks);
+    }
+
+    /** Displays the supplied tasks as a one-based numbered list. */
+    private void showNumberedTasks(TaskList tasks) {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
         }

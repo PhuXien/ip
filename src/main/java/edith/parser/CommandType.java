@@ -6,6 +6,7 @@ public enum CommandType {
     DEADLINE("deadline", true),
     EVENT("event", true),
     LIST("list", false),
+    FIND("find", true),
     MARK("mark", true),
     UNMARK("unmark", true),
     DELETE("delete", true),

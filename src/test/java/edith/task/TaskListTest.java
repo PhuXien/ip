@@ -58,4 +58,21 @@ public class TaskListTest {
         tasks.add(new Todo("read book"));
         assertFalse(tasks.isEmpty());
     }
+
+    @Test
+    public void find_wordOrPhrase_returnsCaseInsensitiveMatchesInOriginalOrder() {
+        TaskList tasks = new TaskList(List.of(
+                new Todo("Read Book"),
+                new Todo("book flight"),
+                new Todo("read notes")));
+
+        TaskList wordMatches = tasks.find("BOOK");
+        TaskList phraseMatches = tasks.find("read book");
+
+        assertEquals(2, wordMatches.size());
+        assertEquals("[T][ ] Read Book", wordMatches.get(0).toString());
+        assertEquals("[T][ ] book flight", wordMatches.get(1).toString());
+        assertEquals(1, phraseMatches.size());
+        assertEquals("[T][ ] Read Book", phraseMatches.get(0).toString());
+    }
 }

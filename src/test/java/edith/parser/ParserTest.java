@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import edith.command.AddCommand;
 import edith.command.DeleteCommand;
 import edith.command.ExitCommand;
+import edith.command.FindCommand;
 import edith.command.ListCommand;
 import edith.command.MarkCommand;
 import edith.command.UnmarkCommand;
@@ -23,6 +24,7 @@ public class ParserTest {
         assertInstanceOf(AddCommand.class,
                 Parser.parse("event meeting /from 2026-09-06 1400 /to 2026-09-06 1500"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
@@ -33,8 +35,15 @@ public class ParserTest {
     public void parse_unknownCommand_exceptionThrown() {
         EdithException exception = assertThrows(EdithException.class, () -> Parser.parse("remind me"));
 
-        assertEquals("I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.",
+        assertEquals("I don't know what that means. Use todo, deadline, event, list, find, "
+                        + "mark, unmark, delete, or bye.",
                 exception.getMessage());
+    }
+
+    @Test
+    public void parse_findWithoutKeyword_exceptionThrown() {
+        assertEquals("Please provide a word or phrase to find. Use: find KEYWORD",
+                assertThrows(EdithException.class, () -> Parser.parse("find")).getMessage());
     }
 
     @Test
