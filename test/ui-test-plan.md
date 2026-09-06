@@ -19,6 +19,7 @@ mark 1
 mark 2
 mark 4
 list
+find book
 delete 3
 list
 bye
@@ -81,6 +82,12 @@ Here are the tasks in your list:
 5.[T][ ] borrow book
 ____________________________________________________________
 ____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][X] read book
+2.[D][X] return book (by: Dec 02 2019 18:00)
+3.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
 Noted. I've removed this task:
   [E][ ] project meeting (from: Aug 06 2019 14:00 to: Aug 06 2019 16:00)
 Now you have 4 tasks in the list.
@@ -118,6 +125,7 @@ mark
 mark 1
 delete
 delete 1
+find
 blah
 bye
 ```
@@ -182,7 +190,10 @@ Noted. I've removed this task:
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! I don't know what that means. Use todo, deadline, event, list, mark, unmark, delete, or bye.
+OOPS!!! Please provide a word or phrase to find. Use: find KEYWORD
+____________________________________________________________
+____________________________________________________________
+OOPS!!! I don't know what that means. Use todo, deadline, event, list, find, mark, unmark, delete, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

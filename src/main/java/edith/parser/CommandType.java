@@ -10,6 +10,8 @@ public enum CommandType {
     EVENT("event", true),
     /** Displays the current task list. */
     LIST("list", false),
+    /** Finds tasks from current task list with corresponding matching characters/words*/
+    FIND("find", true),
     /** Marks a task as completed. */
     MARK("mark", true),
     /** Marks a task as incomplete. */

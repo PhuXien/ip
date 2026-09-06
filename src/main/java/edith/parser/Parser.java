@@ -6,6 +6,7 @@ import edith.command.AddCommand;
 import edith.command.Command;
 import edith.command.DeleteCommand;
 import edith.command.ExitCommand;
+import edith.command.FindCommand;
 import edith.command.ListCommand;
 import edith.command.MarkCommand;
 import edith.command.UnmarkCommand;
@@ -28,13 +29,14 @@ public class Parser {
     public static Command parse(String command) throws EdithException {
         CommandType commandType = CommandType.fromInput(command);
         if (commandType == null) {
-            throw new EdithException("I don't know what that means. Use todo, deadline, event, list, mark, "
-                    + "unmark, delete, or bye.");
+            throw new EdithException("I don't know what that means. Use todo, deadline, event, list, find, "
+                    + "mark, unmark, delete, or bye.");
         }
 
         return switch (commandType) {
         case BYE -> new ExitCommand();
         case LIST -> new ListCommand();
+        case FIND -> new FindCommand(parseFindKeyword(command));
         case MARK -> new MarkCommand(parseTaskNumber(command, commandType));
         case UNMARK -> new UnmarkCommand(parseTaskNumber(command, commandType));
         case DELETE -> new DeleteCommand(parseTaskNumber(command, commandType));
@@ -42,6 +44,15 @@ public class Parser {
         case DEADLINE -> new AddCommand(parseDeadline(command));
         case EVENT -> new AddCommand(parseEvent(command));
         };
+    }
+
+    /** Parses and validates the search text supplied to a find command. */
+    private static String parseFindKeyword(String command) throws EdithException {
+        String keyword = command.substring(CommandType.FIND.getKeyword().length()).trim();
+        if (keyword.isEmpty()) {
+            throw new EdithException("Please provide a word or phrase to find. Use: find KEYWORD");
+        }
+        return keyword;
     }
 
     /** Parses a todo command into a task. */
@@ -119,8 +130,7 @@ public class Parser {
     }
 
     /** Parses a command date-time and gives the user a corrective message when it is invalid. */
-    private static DateFormatter.ParsedDateTime parseDateTime(String dateText, String dateRole)
-            throws EdithException {
+    private static DateFormatter.ParsedDateTime parseDateTime(String dateText, String dateRole) throws EdithException {
         try {
             return DateFormatter.parseInput(dateText);
         } catch (DateTimeParseException e) {
