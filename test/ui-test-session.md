@@ -1,6 +1,6 @@
 # UI Test Session
 
-Ran with Java 25.0.4.1. Each case used a fresh application process in one clean temporary working directory, preserving saved data between cases as required. Actual output was compared exactly after line-ending normalization.
+Ran on 2026-09-06 with Java 25.0.4.1. Each case used a fresh application process in one clean temporary working directory, preserving saved data between cases as required. Actual output was compared exactly after line-ending normalization.
 
 ## Test case 1: Passed
 
