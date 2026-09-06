@@ -35,6 +35,11 @@ public class Deadline extends Task {
                 + " (by: " + DateFormatter.formatForDisplay(by, hasTime) + ")";
     }
 
+    /**
+     * Returns the identifier for a deadline task.
+     *
+     * @return {@code deadline}
+     */
     @Override
     protected String getTaskType() {
         return "deadline";

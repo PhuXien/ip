@@ -32,7 +32,13 @@ public class Storage {
         return loadTasks(DATA_FILE);
     }
 
-    /** Loads tasks from the supplied file, allowing persistence logic to be tested safely. */
+    /**
+     * Loads tasks from a specified file so persistence can be tested without using the application data file.
+     *
+     * @param dataFile the file from which tasks are loaded
+     * @return the tasks stored in the file, or an empty list if the file does not exist
+     * @throws IOException if the file cannot be read or contains an invalid task
+     */
     static List<Task> loadTasks(Path dataFile) throws IOException {
         List<Task> tasks = new ArrayList<>();
         if (!Files.exists(dataFile)) {
@@ -57,7 +63,13 @@ public class Storage {
         saveTasks(tasks, DATA_FILE);
     }
 
-    /** Saves tasks to the supplied file, allowing persistence logic to be tested safely. */
+    /**
+     * Saves tasks to a specified file so persistence can be tested without using the application data file.
+     *
+     * @param tasks the tasks to save in their current order
+     * @param dataFile the file to which tasks are written
+     * @throws IOException if the file or its parent directory cannot be written
+     */
     static void saveTasks(List<Task> tasks, Path dataFile) throws IOException {
         Files.createDirectories(dataFile.getParent());
         List<String> lines = new ArrayList<>();

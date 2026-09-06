@@ -53,7 +53,7 @@ public abstract class Task {
     /**
      * Returns the lower-case command name for this task type.
      *
-     * @return the task type used in user-facing error messages
+     * @return the identifier for the concrete task type
      */
     protected abstract String getTaskType();
 }
