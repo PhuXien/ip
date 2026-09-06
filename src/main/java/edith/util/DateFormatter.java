@@ -12,9 +12,11 @@ public final class DateFormatter {
     /** The ISO date-time format accepted in commands. */
     private static final DateTimeFormatter DATE_TIME_INPUT_FORMAT = DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm");
     /** The readable date format used in task lists and saved tasks. */
-    private static final DateTimeFormatter DATE_DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
     /** The readable date-time format used in task lists and saved tasks. */
-    private static final DateTimeFormatter DATE_TIME_DISPLAY_FORMAT = DateTimeFormatter.ofPattern("MMM dd uuuu HH:mm", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_TIME_DISPLAY_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd uuuu HH:mm", Locale.ENGLISH);
 
     private DateFormatter() {
     }

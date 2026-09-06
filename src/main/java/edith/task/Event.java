@@ -9,27 +9,28 @@ public class Event extends Task {
     /** The date and optional time at which this event starts. */
     private final LocalDateTime from;
     /** Whether the event start includes a time. */
-    private final boolean fromHasTime;
+    private final boolean hasStartTime;
     /** The date and optional time at which this event ends. */
     private final LocalDateTime to;
     /** Whether the event end includes a time. */
-    private final boolean toHasTime;
+    private final boolean hasEndTime;
 
     /**
      * Creates an event with its description, start date-time, and end date-time.
      *
      * @param description the text describing the event
      * @param from the start date-time
-     * @param fromHasTime whether the start includes a time
+     * @param hasStartTime whether the start includes a time
      * @param to the end date-time
-     * @param toHasTime whether the end includes a time
+     * @param hasEndTime whether the end includes a time
      */
-    public Event(String description, LocalDateTime from, boolean fromHasTime, LocalDateTime to, boolean toHasTime) {
+    public Event(String description, LocalDateTime from, boolean hasStartTime, LocalDateTime to,
+            boolean hasEndTime) {
         super(description);
         this.from = from;
-        this.fromHasTime = fromHasTime;
+        this.hasStartTime = hasStartTime;
         this.to = to;
-        this.toHasTime = toHasTime;
+        this.hasEndTime = hasEndTime;
     }
 
     /**
@@ -40,8 +41,8 @@ public class Event extends Task {
     @Override
     public String toString() {
         return "[E]" + getStatusIcon() + " " + getDescription()
-                + " (from: " + DateFormatter.formatForDisplay(from, fromHasTime)
-                + " to: " + DateFormatter.formatForDisplay(to, toHasTime) + ")";
+                + " (from: " + DateFormatter.formatForDisplay(from, hasStartTime)
+                + " to: " + DateFormatter.formatForDisplay(to, hasEndTime) + ")";
     }
 
     /**

@@ -24,6 +24,12 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Java coding standard
+
+For every Java code change in this project, load and follow the project-specific
+`seedu-java-coding-standard` skill in `.codex/skills/seedu-java-coding-standard/`.
+Review existing code touched by the change for compliance with that standard.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
@@ -41,6 +47,11 @@ After every code update, review `test/ui-test-plan.md` and update its test cases
 If a UI test fails, stop the test session immediately as required by the skill, and report the recorded actual and expected outputs. Do not continue with later test cases.
 
 ## Git
+
+Before proposing or creating any commit in this project, load and follow the
+project-specific `seedu-git-standard` skill in
+`.codex/skills/seedu-git-standard/`. Ensure every commit message complies with
+that standard.
 
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
