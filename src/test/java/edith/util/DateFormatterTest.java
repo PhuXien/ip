@@ -30,26 +30,22 @@ public class DateFormatterTest {
 
     @Test
     public void parseInput_invalidCalendarDate_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseInput("2026-02-29"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseInput("2026-02-29"));
     }
 
     @Test
     public void parseInput_invalidTime_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseInput("2026-09-06 2500"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseInput("2026-09-06 2500"));
     }
 
     @Test
     public void parseInput_incorrectDateFormat_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseInput("06-09-2026"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseInput("06-09-2026"));
     }
 
     @Test
     public void parseInput_incorrectTimeFormat_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseInput("2026-09-06 14:30"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseInput("2026-09-06 14:30"));
     }
 
     @Test
@@ -70,26 +66,22 @@ public class DateFormatterTest {
 
     @Test
     public void parseDisplayedDateTime_invalidCalendarDate_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseDisplayedDateTime("Apr 32 2026"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseDisplayedDateTime("Apr 32 2026"));
     }
 
     @Test
     public void parseDisplayedDateTime_invalidTime_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseDisplayedDateTime("Sep 06 2026 25:00"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseDisplayedDateTime("Sep 06 2026 25:00"));
     }
 
     @Test
     public void parseDisplayedDateTime_incorrectDateFormat_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseDisplayedDateTime("September 06 2026"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseDisplayedDateTime("September 06 2026"));
     }
 
     @Test
     public void parseDisplayedDateTime_incorrectTimeFormat_exceptionThrown() {
-        assertThrows(DateTimeParseException.class,
-                () -> DateFormatter.parseDisplayedDateTime("Sep 06 2026 1430"));
+        assertThrows(DateTimeParseException.class, () -> DateFormatter.parseDisplayedDateTime("Sep 06 2026 1430"));
     }
 
     @Test

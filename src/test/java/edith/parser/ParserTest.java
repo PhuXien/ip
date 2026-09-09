@@ -66,12 +66,9 @@ public class ParserTest {
         assertThrows(EdithException.class, () -> Parser.parse("event /from 2026-09-06 /to 2026-09-07"));
         assertThrows(EdithException.class, () -> Parser.parse("event meeting /from /to 2026-09-07"));
         assertThrows(EdithException.class, () -> Parser.parse("event meeting /from 2026-09-06 /to"));
-        assertThrows(EdithException.class,
-                () -> Parser.parse("event meeting /to 2026-09-07 /from 2026-09-06"));
-        assertThrows(EdithException.class,
-                () -> Parser.parse("event meeting /from tomorrow /to 2026-09-07"));
-        assertThrows(EdithException.class,
-                () -> Parser.parse("event meeting /from 2026-09-06 /to tomorrow"));
+        assertThrows(EdithException.class, () -> Parser.parse("event meeting /to 2026-09-07 /from 2026-09-06"));
+        assertThrows(EdithException.class, () -> Parser.parse("event meeting /from tomorrow /to 2026-09-07"));
+        assertThrows(EdithException.class, () -> Parser.parse("event meeting /from 2026-09-06 /to tomorrow"));
     }
 
     @Test

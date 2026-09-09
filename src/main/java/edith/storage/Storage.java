@@ -102,17 +102,17 @@ public class Storage {
         Task task;
         String descriptionAndTime = taskText.substring(7);
         switch (taskText.charAt(1)) {
-        case 'T':
-            task = new Todo(descriptionAndTime);
-            break;
-        case 'D':
-            task = parseDeadline(descriptionAndTime, savedLine);
-            break;
-        case 'E':
-            task = parseEvent(descriptionAndTime, savedLine);
-            break;
-        default:
-            throw new IOException("Invalid saved task: " + savedLine);
+            case 'T':
+                task = new Todo(descriptionAndTime);
+                break;
+            case 'D':
+                task = parseDeadline(descriptionAndTime, savedLine);
+                break;
+            case 'E':
+                task = parseEvent(descriptionAndTime, savedLine);
+                break;
+            default:
+                throw new IOException("Invalid saved task: " + savedLine);
         }
         if (taskText.charAt(4) == 'X') {
             task.markAsDone();

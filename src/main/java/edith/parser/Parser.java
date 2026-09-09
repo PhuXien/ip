@@ -34,15 +34,15 @@ public class Parser {
         }
 
         return switch (commandType) {
-        case BYE -> new ExitCommand();
-        case LIST -> new ListCommand();
-        case FIND -> new FindCommand(parseFindKeyword(command));
-        case MARK -> new MarkCommand(parseTaskNumber(command, commandType));
-        case UNMARK -> new UnmarkCommand(parseTaskNumber(command, commandType));
-        case DELETE -> new DeleteCommand(parseTaskNumber(command, commandType));
-        case TODO -> new AddCommand(parseTodo(command));
-        case DEADLINE -> new AddCommand(parseDeadline(command));
-        case EVENT -> new AddCommand(parseEvent(command));
+            case BYE -> new ExitCommand();
+            case LIST -> new ListCommand();
+            case FIND -> new FindCommand(parseFindKeyword(command));
+            case MARK -> new MarkCommand(parseTaskNumber(command, commandType));
+            case UNMARK -> new UnmarkCommand(parseTaskNumber(command, commandType));
+            case DELETE -> new DeleteCommand(parseTaskNumber(command, commandType));
+            case TODO -> new AddCommand(parseTodo(command));
+            case DEADLINE -> new AddCommand(parseDeadline(command));
+            case EVENT -> new AddCommand(parseEvent(command));
         };
     }
 
