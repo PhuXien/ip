@@ -1,6 +1,6 @@
 # UI Test Session
 
-All planned console UI tests passed using Java 25.0.4.1.
+All planned console UI tests passed using Java 25.0.4.1 on 2026-09-10.
 
 ## Test case 1: Delete a task and renumber the remaining list
 
