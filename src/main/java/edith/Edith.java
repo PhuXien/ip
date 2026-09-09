@@ -11,19 +11,36 @@ import edith.ui.Ui;
 
 /** Entry point for the Edith chatbot. */
 public class Edith {
+    private final StringBuilder responseBuffer;
     private final Ui ui;
+    private boolean isExit;
     private TaskList tasks;
 
     /** Creates an Edith application with a console user interface. */
     public Edith() {
         this.ui = new Ui();
+        this.responseBuffer = null;
+    }
+
+    private Edith(StringBuilder responseBuffer) {
+        this.responseBuffer = responseBuffer;
+        this.ui = new Ui(line -> responseBuffer.append(line).append(System.lineSeparator()));
+        this.tasks = loadTasks();
+    }
+
+    /**
+     * Creates an Edith instance whose responses can be displayed by a graphical interface.
+     *
+     * @return a chatbot configured to collect each response as text
+     */
+    public static Edith createForGui() {
+        return new Edith(new StringBuilder());
     }
 
     /** Starts Edith's command-processing loop. */
     public void run() {
         ui.showWelcome();
         tasks = loadTasks();
-        boolean isExit = false;
         while (!isExit && ui.hasNextCommand()) {
             String command = ui.readCommand();
             ui.showDivider();
@@ -38,6 +55,36 @@ public class Edith {
                 ui.showDivider();
             }
         }
+    }
+
+    /**
+     * Processes one command and returns the text that Edith would display.
+     *
+     * @param input one complete command entered by the user
+     * @return Edith's response without a trailing line separator
+     */
+    public String getResponse(String input) {
+        if (responseBuffer == null) {
+            throw new IllegalStateException("getResponse is available only on GUI-configured instances.");
+        }
+        responseBuffer.setLength(0);
+        try {
+            Command parsedCommand = Parser.parse(input);
+            parsedCommand.execute(tasks, ui);
+            isExit = parsedCommand.isExit();
+        } catch (EdithException e) {
+            ui.showError(e);
+        }
+        return responseBuffer.toString().stripTrailing();
+    }
+
+    /**
+     * Returns whether the most recently processed command asked Edith to exit.
+     *
+     * @return {@code true} after a successful {@code bye} command
+     */
+    public boolean isExit() {
+        return isExit;
     }
 
     /**

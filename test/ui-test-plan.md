@@ -2,7 +2,7 @@
 
 <!-- test-ui-run: java -cp build/classes edith.Edith -->
 
-Run `javac -d build/classes (Get-ChildItem -Recurse src/main/java -Filter *.java)` with Java 25 before executing this plan. Begin with no `data/` directory. Each case starts a fresh application session; later cases intentionally retain the data saved by earlier cases to test persistence.
+Run `.\gradlew.bat compileJava` with Java 25 before executing this plan. Begin with no `data/` directory. Each case starts a fresh application session; later cases intentionally retain the data saved by earlier cases to test persistence.
 
 ## Test case 1: Delete a task and renumber the remaining list
 
