@@ -59,9 +59,7 @@ public class Ui {
                 | |___| |_| | |  | | |  _  |
                 |_____|____/___| |_| |_| |_|
                 """;
-        output.accept(banner);
-        output.accept("Hello! I'm EDITH.");
-        output.accept("What can I do for you?");
+        showLines(banner, "Hello! I'm EDITH.", "What can I do for you?");
         showDivider();
     }
 
@@ -112,6 +110,13 @@ public class Ui {
         }
     }
 
+    /** Displays each supplied line in order. */
+    private void showLines(String... lines) {
+        for (String line : lines) {
+            output.accept(line);
+        }
+    }
+
     /**
      * Displays confirmation that a task was added.
      *
@@ -119,9 +124,10 @@ public class Ui {
      * @param taskCount the number of tasks after the addition
      */
     public void showTaskAdded(Task task, int taskCount) {
-        output.accept("Got it. I've added this task:");
-        output.accept("  " + task);
-        output.accept("Now you have " + taskCount + " tasks in the list.");
+        showLines(
+                "Got it. I've added this task:",
+                "  " + task,
+                "Now you have " + taskCount + " tasks in the list.");
     }
 
     /**
@@ -131,12 +137,10 @@ public class Ui {
      * @param isDone whether the task is now completed
      */
     public void showTaskMarked(Task task, boolean isDone) {
-        if (isDone) {
-            output.accept("Nice! I've marked this task as done:");
-        } else {
-            output.accept("OK, I've marked this task as not done yet:");
-        }
-        output.accept("  " + task);
+        String confirmation = isDone
+                ? "Nice! I've marked this task as done:"
+                : "OK, I've marked this task as not done yet:";
+        showLines(confirmation, "  " + task);
     }
 
     /**
@@ -146,8 +150,9 @@ public class Ui {
      * @param taskCount the number of tasks after the removal
      */
     public void showTaskDeleted(Task task, int taskCount) {
-        output.accept("Noted. I've removed this task:");
-        output.accept("  " + task);
-        output.accept("Now you have " + taskCount + " tasks in the list.");
+        showLines(
+                "Noted. I've removed this task:",
+                "  " + task,
+                "Now you have " + taskCount + " tasks in the list.");
     }
 }
