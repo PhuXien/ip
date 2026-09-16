@@ -24,11 +24,11 @@ public class TaskCommandValidationTest {
         assertEquals("There are no tasks to delete. Add a task first.",
                 assertThrows(EdithException.class, () -> new DeleteCommand(1).execute(tasks, null)).getMessage());
         assertEquals("There are no tasks to tag. Add a task first.",
-                assertThrows(EdithException.class,
-                        () -> new TagCommand(1, List.of("#fun")).execute(tasks, null)).getMessage());
+                assertThrows(EdithException.class, () -> new TagCommand(1, List.of("#fun"))
+                        .execute(tasks, null)).getMessage());
         assertEquals("There are no tasks to untag. Add a task first.",
-                assertThrows(EdithException.class,
-                        () -> new UntagCommand(1, List.of("#fun")).execute(tasks, null)).getMessage());
+                assertThrows(EdithException.class, () -> new UntagCommand(1, List.of("#fun"))
+                        .execute(tasks, null)).getMessage());
     }
 
     @Test
@@ -43,10 +43,10 @@ public class TaskCommandValidationTest {
         assertEquals("Please provide a task number from 1 to 1.",
                 assertThrows(EdithException.class, () -> new DeleteCommand(-1).execute(tasks, null)).getMessage());
         assertEquals("Please provide a task number from 1 to 1.",
-                assertThrows(EdithException.class,
-                        () -> new TagCommand(2, List.of("#fun")).execute(tasks, null)).getMessage());
+                assertThrows(EdithException.class, () -> new TagCommand(2, List.of("#fun"))
+                        .execute(tasks, null)).getMessage());
         assertEquals("Please provide a task number from 1 to 1.",
-                assertThrows(EdithException.class,
-                        () -> new UntagCommand(0, List.of("#fun")).execute(tasks, null)).getMessage());
+                assertThrows(EdithException.class, () -> new UntagCommand(0, List.of("#fun"))
+                        .execute(tasks, null)).getMessage());
     }
 }

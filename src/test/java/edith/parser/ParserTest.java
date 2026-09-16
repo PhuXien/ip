@@ -99,12 +99,12 @@ public class ParserTest {
         assertEquals("Please provide at least one tag after /tags.",
                 assertThrows(EdithException.class, () -> Parser.parse("todo read book /tags")).getMessage());
         assertEquals("Tags must start with # and contain only letters, digits, underscores, or hyphens.",
-                assertThrows(EdithException.class,
-                        () -> Parser.parse("todo read book /tags #fun #bad!")).getMessage());
-        assertThrows(EdithException.class,
-                () -> Parser.parse("todo read book /tags #fun /tags #school"));
-        assertThrows(EdithException.class,
-                () -> Parser.parse("deadline report /by 2026-09-20 /tags #"));
+                assertThrows(EdithException.class, () ->
+                        Parser.parse("todo read book /tags #fun #bad!")).getMessage());
+        assertThrows(EdithException.class, () ->
+                Parser.parse("todo read book /tags #fun /tags #school"));
+        assertThrows(EdithException.class, () ->
+                Parser.parse("deadline report /by 2026-09-20 /tags #"));
     }
 
     @Test
