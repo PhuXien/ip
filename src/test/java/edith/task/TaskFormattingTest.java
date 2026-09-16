@@ -62,4 +62,17 @@ public class TaskFormattingTest {
         assertEquals("[D][ ] submit work (by: Sep 20 2026) [tags: #school]", deadline.toString());
         assertEquals("[E][ ] meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]", event.toString());
     }
+
+    @Test
+    public void removeTag_caseInsensitiveRemoval_preservesOtherTagsAndDropsEmptySuffix() {
+        Todo todo = new Todo("read book");
+        todo.addTag("#Fun");
+        todo.addTag("#school");
+
+        assertTrue(todo.removeTag("#FUN"));
+        assertFalse(todo.removeTag("#missing"));
+        assertEquals("[T][ ] read book [tags: #school]", todo.toString());
+        assertTrue(todo.removeTag("#school"));
+        assertEquals("[T][ ] read book", todo.toString());
+    }
 }

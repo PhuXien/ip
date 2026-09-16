@@ -86,6 +86,19 @@ public abstract class Task {
         return tags.putIfAbsent(normalizedTag, tag) == null;
     }
 
+    /**
+     * Removes a tag using its case-insensitive name.
+     *
+     * @param tag the valid tag to remove
+     * @return whether the task lost a tag
+     */
+    public boolean removeTag(String tag) {
+        if (!isValidTag(tag)) {
+            throw new IllegalArgumentException("Invalid tag: " + tag);
+        }
+        return tags.remove(tag.toLowerCase(Locale.ROOT)) != null;
+    }
+
     /** Returns an immutable snapshot of tags in the order they were first added. */
     public List<String> getTags() {
         return List.copyOf(tags.values());

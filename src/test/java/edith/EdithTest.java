@@ -15,7 +15,7 @@ public class EdithTest {
         String response = edith.getResponse("unknown");
 
         assertEquals("OOPS!!! I don't know what that means. Use todo, deadline, event, list, find, mark, "
-                + "unmark, delete, or bye.", response);
+                + "unmark, delete, tag, untag, or bye.", response);
         assertFalse(edith.isExit());
     }
 

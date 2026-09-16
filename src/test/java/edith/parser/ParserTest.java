@@ -12,7 +12,9 @@ import edith.command.ExitCommand;
 import edith.command.FindCommand;
 import edith.command.ListCommand;
 import edith.command.MarkCommand;
+import edith.command.TagCommand;
 import edith.command.UnmarkCommand;
+import edith.command.UntagCommand;
 import edith.exception.EdithException;
 
 /** Tests translation of user input into executable commands. */
@@ -28,6 +30,8 @@ public class ParserTest {
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
         assertInstanceOf(DeleteCommand.class, Parser.parse("delete 1"));
+        assertInstanceOf(TagCommand.class, Parser.parse("tag 2 #fun #school"));
+        assertInstanceOf(UntagCommand.class, Parser.parse("untag 2 #fun"));
         assertInstanceOf(ExitCommand.class, Parser.parse("bye"));
     }
 
@@ -36,7 +40,7 @@ public class ParserTest {
         EdithException exception = assertThrows(EdithException.class, () -> Parser.parse("remind me"));
 
         assertEquals("I don't know what that means. Use todo, deadline, event, list, find, "
-                        + "mark, unmark, delete, or bye.",
+                        + "mark, unmark, delete, tag, untag, or bye.",
                 exception.getMessage());
     }
 
@@ -101,5 +105,21 @@ public class ParserTest {
                 () -> Parser.parse("todo read book /tags #fun /tags #school"));
         assertThrows(EdithException.class,
                 () -> Parser.parse("deadline report /by 2026-09-20 /tags #"));
+    }
+
+    @Test
+    public void parse_tagCommands_rejectsMissingNumbersTagsAndMalformedTags() {
+        assertEquals("Please provide a whole-number task number. Use: tag NUMBER #tag [#tag ...]",
+                assertThrows(EdithException.class, () -> Parser.parse("tag")).getMessage());
+        assertEquals("Please provide a whole-number task number. Use: untag NUMBER #tag [#tag ...]",
+                assertThrows(EdithException.class, () -> Parser.parse("untag two #fun")).getMessage());
+        assertEquals("Please provide at least one tag. Use: tag NUMBER #tag [#tag ...]",
+                assertThrows(EdithException.class, () -> Parser.parse("tag 2")).getMessage());
+        assertEquals("Please provide at least one tag. Use: untag NUMBER #tag [#tag ...]",
+                assertThrows(EdithException.class, () -> Parser.parse("untag 2")).getMessage());
+        assertEquals("Tags must start with # and contain only letters, digits, underscores, or hyphens.",
+                assertThrows(EdithException.class, () -> Parser.parse("tag 2 #fun #bad!")).getMessage());
+        assertThrows(EdithException.class, () -> Parser.parse("untag 2 fun"));
+        assertThrows(EdithException.class, () -> Parser.parse("tag 2 /as #fun"));
     }
 }

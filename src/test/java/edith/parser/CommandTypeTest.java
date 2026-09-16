@@ -23,6 +23,8 @@ public class CommandTypeTest {
         assertEquals(CommandType.MARK, CommandType.fromInput("mark 1"));
         assertEquals(CommandType.UNMARK, CommandType.fromInput("unmark 1"));
         assertEquals(CommandType.DELETE, CommandType.fromInput("delete 1"));
+        assertEquals(CommandType.TAG, CommandType.fromInput("tag 2 #fun"));
+        assertEquals(CommandType.UNTAG, CommandType.fromInput("untag 2 #fun"));
         assertEquals(CommandType.FIND, CommandType.fromInput("find read book"));
     }
 
