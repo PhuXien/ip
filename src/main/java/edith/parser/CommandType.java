@@ -1,5 +1,7 @@
 package edith.parser;
 
+import java.util.Arrays;
+
 /** Represents the commands understood by Edith. */
 public enum CommandType {
     /** Adds a task without a date or time. */
@@ -51,12 +53,10 @@ public enum CommandType {
      * @return the matching command type, or {@code null} when the input is unknown
      */
     public static CommandType fromInput(String input) {
-        for (CommandType commandType : values()) {
-            if (input.equals(commandType.keyword)
-                    || commandType.acceptsArguments && input.startsWith(commandType.keyword + " ")) {
-                return commandType;
-            }
-        }
-        return null;
+        return Arrays.stream(values())
+                .filter(commandType -> input.equals(commandType.keyword)
+                        || commandType.acceptsArguments && input.startsWith(commandType.keyword + " "))
+                .findFirst()
+                .orElse(null);
     }
 }
