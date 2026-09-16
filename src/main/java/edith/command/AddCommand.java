@@ -27,7 +27,10 @@ public class AddCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) throws EdithException {
+        int previousSize = tasks.size();
         tasks.add(task);
+        assert tasks.size() == previousSize + 1 && tasks.get(previousSize) == task
+                : "Adding a task must append exactly that task";
         saveTasks(tasks);
         ui.showTaskAdded(task, tasks.size());
     }
