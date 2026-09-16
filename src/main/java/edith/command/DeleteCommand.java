@@ -34,7 +34,11 @@ public class DeleteCommand extends Command {
             throw new EdithException("Please provide a task number from 1 to " + tasks.size() + ".");
         }
 
+        int previousSize = tasks.size();
+        Task selectedTask = tasks.get(taskNumber - 1);
         Task removedTask = tasks.remove(taskNumber - 1);
+        assert tasks.size() == previousSize - 1 && removedTask == selectedTask
+                : "Deleting a task must remove exactly the selected task";
         saveTasks(tasks);
         ui.showTaskDeleted(removedTask, tasks.size());
     }
