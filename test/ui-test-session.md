@@ -1,7 +1,5 @@
 # UI Test Session
 
-Run command: java -ea -cp build/classes/java/main edith.Edith
-
 ## Test case 1: Delete a task and renumber the remaining list
 
 **Inputs:**
@@ -450,6 +448,162 @@ Here are the tasks in your list:
 1.[D][ ] return book (by: Dec 02 2019 18:00)
 2.[T][X] join sports club
 3.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 5: Create tagged tasks of every type
+
+**Inputs:**
+```text
+todo read notes /tags #fun #school
+deadline submit work /by 2026-09-20 /tags #school
+event team meeting /from 2026-09-20 /to 2026-09-21 /tags #team
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read notes [tags: #fun #school]
+Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] submit work (by: Sep 20 2026) [tags: #school]
+Now you have 5 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+Now you have 6 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+**Actual output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read notes [tags: #fun #school]
+Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] submit work (by: Sep 20 2026) [tags: #school]
+Now you have 5 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+Now you have 6 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 6: Restore tagged tasks and reject malformed creation
+
+**Inputs:**
+```text
+todo learn tags /tags #bad!
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+**Actual output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

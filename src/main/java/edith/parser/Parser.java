@@ -1,6 +1,10 @@
 package edith.parser;
 
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edith.command.AddCommand;
 import edith.command.Command;
@@ -25,6 +29,11 @@ public class Parser {
     private static final String DEADLINE_DATE_MARKER = "/by";
     private static final String EVENT_START_MARKER = "/from";
     private static final String EVENT_END_MARKER = "/to";
+    private static final Pattern TAG_MARKER_PATTERN = Pattern.compile("(?<!\\S)/tags(?=\\s|$)");
+
+    /** Separates a task's existing command details from optional trailing tags. */
+    private record TaskDetails(String text, List<String> tags) {
+    }
 
     /**
      * Parses complete user input into an executable command.
@@ -64,16 +73,19 @@ public class Parser {
 
     /** Parses a todo command into a task. */
     private static Task parseTodo(String command) throws EdithException {
-        String description = command.substring(CommandType.TODO.getKeyword().length()).trim();
+        TaskDetails details = parseTaskDetails(command.substring(CommandType.TODO.getKeyword().length()).trim());
+        String description = details.text();
         if (description.isEmpty()) {
             throw new EdithException("The description of a todo cannot be empty.");
         }
-        return new Todo(description);
+        return addTags(new Todo(description), details.tags());
     }
 
     /** Parses a deadline command into a task. */
     private static Task parseDeadline(String command) throws EdithException {
-        String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
+        TaskDetails taggedDetails = parseTaskDetails(
+                command.substring(CommandType.DEADLINE.getKeyword().length()).trim());
+        String details = taggedDetails.text();
         int byMarker = details.indexOf(DEADLINE_DATE_MARKER);
         if (byMarker < 0) {
             throw new EdithException("A deadline needs a description and due date. Use: " + DEADLINE_USAGE);
@@ -88,12 +100,14 @@ public class Parser {
             throw new EdithException("A deadline needs a due date after /by. Use: " + DEADLINE_USAGE);
         }
         DateFormatter.ParsedDateTime dueDateTime = parseDateTime(by, "deadline");
-        return new Deadline(description, dueDateTime.value(), dueDateTime.hasTime());
+        return addTags(new Deadline(description, dueDateTime.value(), dueDateTime.hasTime()), taggedDetails.tags());
     }
 
     /** Parses an event command into a task. */
     private static Task parseEvent(String command) throws EdithException {
-        String details = command.substring(CommandType.EVENT.getKeyword().length()).trim();
+        TaskDetails taggedDetails = parseTaskDetails(
+                command.substring(CommandType.EVENT.getKeyword().length()).trim());
+        String details = taggedDetails.text();
         int fromMarker = details.indexOf(EVENT_START_MARKER);
         int toMarker = details.indexOf(EVENT_END_MARKER);
         if (fromMarker < 0 || toMarker < 0 || toMarker < fromMarker) {
@@ -114,8 +128,38 @@ public class Parser {
         }
         DateFormatter.ParsedDateTime startDateTime = parseDateTime(from, "event start");
         DateFormatter.ParsedDateTime endDateTime = parseDateTime(to, "event end");
-        return new Event(description, startDateTime.value(), startDateTime.hasTime(),
-                endDateTime.value(), endDateTime.hasTime());
+        return addTags(new Event(description, startDateTime.value(), startDateTime.hasTime(),
+                endDateTime.value(), endDateTime.hasTime()), taggedDetails.tags());
+    }
+
+    /** Extracts tags only when the standalone /tags marker appears in a creation command. */
+    private static TaskDetails parseTaskDetails(String details) throws EdithException {
+        Matcher marker = TAG_MARKER_PATTERN.matcher(details);
+        if (!marker.find()) {
+            return new TaskDetails(details, List.of());
+        }
+
+        String taskText = details.substring(0, marker.start()).trim();
+        String tagText = details.substring(marker.end()).trim();
+        if (tagText.isEmpty()) {
+            throw new EdithException("Please provide at least one tag after /tags.");
+        }
+        List<String> tags = Arrays.asList(tagText.split("\\s+"));
+        for (String tag : tags) {
+            if (!Task.isValidTag(tag)) {
+                throw new EdithException("Tags must start with # and contain only letters, digits, "
+                        + "underscores, or hyphens.");
+            }
+        }
+        return new TaskDetails(taskText, tags);
+    }
+
+    /** Adds already-validated tags to a fully parsed task. */
+    private static Task addTags(Task task, List<String> tags) {
+        for (String tag : tags) {
+            task.addTag(tag);
+        }
+        return task;
     }
 
     /** Parses the one-based task number supplied to a mark, unmark, or delete command. */

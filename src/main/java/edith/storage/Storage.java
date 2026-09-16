@@ -21,6 +21,7 @@ public class Storage {
     private static final String DEADLINE_DATE_SEPARATOR = " (by: ";
     private static final String EVENT_START_SEPARATOR = " (from: ";
     private static final String EVENT_END_SEPARATOR = " to: ";
+    private static final String TAG_LINE_PREFIX = "@tags ";
 
     /** A portable path relative to the directory from which Edith is started. */
     private static final Path DATA_FILE = Path.of("data", "edith.txt");
@@ -48,16 +49,31 @@ public class Storage {
             return tasks;
         }
 
+        Task latestTask = null;
+        boolean isTagLineAllowed = false;
         for (String line : Files.readAllLines(dataFile, StandardCharsets.UTF_8)) {
-            if (!line.isBlank() && !line.equals(LIST_HEADING)) {
-                tasks.add(parseTask(line));
+            if (line.isBlank() || line.equals(LIST_HEADING)) {
+                isTagLineAllowed = false;
+                continue;
             }
+            if (line.equals("@tags") || line.startsWith(TAG_LINE_PREFIX)) {
+                if (!isTagLineAllowed) {
+                    throw new IOException("Invalid saved task: " + line);
+                }
+                restoreTags(latestTask, line);
+                isTagLineAllowed = false;
+                continue;
+            }
+
+            latestTask = parseTask(line);
+            tasks.add(latestTask);
+            isTagLineAllowed = true;
         }
         return tasks;
     }
 
     /**
-     * Writes the task list in exactly the format displayed by the {@code list} command.
+     * Writes numbered task lines and adjacent metadata lines for tasks with tags.
      *
      * @param tasks the current tasks to save
      * @throws IOException if the data directory or file cannot be written
@@ -78,9 +94,26 @@ public class Storage {
         List<String> lines = new ArrayList<>();
         lines.add(LIST_HEADING);
         for (int i = 0; i < tasks.size(); i++) {
-            lines.add((i + 1) + "." + tasks.get(i));
+            Task task = tasks.get(i);
+            lines.add((i + 1) + "." + task.toStorageString());
+            if (!task.getTags().isEmpty()) {
+                lines.add(TAG_LINE_PREFIX + String.join(" ", task.getTags()));
+            }
         }
         Files.write(dataFile, lines, StandardCharsets.UTF_8);
+    }
+
+    /** Restores and validates the tag metadata adjacent to a saved task line. */
+    private static void restoreTags(Task task, String tagLine) throws IOException {
+        String tagText = tagLine.substring("@tags".length()).trim();
+        if (tagText.isEmpty()) {
+            throw new IOException("Invalid saved task: " + tagLine);
+        }
+        for (String tag : tagText.split("\\s+")) {
+            if (!Task.isValidTag(tag) || !task.addTag(tag)) {
+                throw new IOException("Invalid saved task: " + tagLine);
+            }
+        }
     }
 
     /**

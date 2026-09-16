@@ -80,4 +80,26 @@ public class ParserTest {
         assertEquals("Please provide a whole-number task number. Use: delete NUMBER",
                 assertThrows(EdithException.class, () -> Parser.parse("delete")).getMessage());
     }
+
+    @Test
+    public void parse_taggedTaskCreation_acceptsAllTaskTypes() throws EdithException {
+        assertInstanceOf(AddCommand.class, Parser.parse("todo read book /tags #fun #school"));
+        assertInstanceOf(AddCommand.class,
+                Parser.parse("deadline submit work /by 2026-09-20 1800 /tags #school"));
+        assertInstanceOf(AddCommand.class,
+                Parser.parse("event meeting /from 2026-09-20 /to 2026-09-21 /tags #team"));
+    }
+
+    @Test
+    public void parse_taggedTaskCreation_rejectsMissingOrMalformedTags() {
+        assertEquals("Please provide at least one tag after /tags.",
+                assertThrows(EdithException.class, () -> Parser.parse("todo read book /tags")).getMessage());
+        assertEquals("Tags must start with # and contain only letters, digits, underscores, or hyphens.",
+                assertThrows(EdithException.class,
+                        () -> Parser.parse("todo read book /tags #fun #bad!")).getMessage());
+        assertThrows(EdithException.class,
+                () -> Parser.parse("todo read book /tags #fun /tags #school"));
+        assertThrows(EdithException.class,
+                () -> Parser.parse("deadline report /by 2026-09-20 /tags #"));
+    }
 }

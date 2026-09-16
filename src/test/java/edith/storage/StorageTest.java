@@ -56,6 +56,45 @@ public class StorageTest {
     }
 
     @Test
+    public void saveAndLoadTasks_taggedTasks_preservesMetadataAndLegacyTaskLines() throws IOException {
+        Todo todo = new Todo("read book");
+        todo.addTag("#Fun");
+        todo.addTag("#school");
+        Deadline deadline = new Deadline("submit work", LocalDateTime.of(2026, 9, 20, 0, 0), false);
+        deadline.addTag("#school");
+        Path dataFile = tempDirectory.resolve("data.txt");
+
+        Storage.saveTasks(List.of(todo, deadline, new Todo("buy milk")), dataFile);
+        List<Task> restoredTasks = Storage.loadTasks(dataFile);
+
+        assertEquals(List.of("Here are the tasks in your list:",
+                "1.[T][ ] read book", "@tags #Fun #school",
+                "2.[D][ ] submit work (by: Sep 20 2026)", "@tags #school",
+                "3.[T][ ] buy milk"), Files.readAllLines(dataFile, StandardCharsets.UTF_8));
+        assertEquals(List.of(todo.toString(), deadline.toString(), "[T][ ] buy milk"),
+                restoredTasks.stream().map(Task::toString).toList());
+    }
+
+    @Test
+    public void loadTasks_legacyDescriptionWithTagLikeText_keepsDescriptionUntagged() throws IOException {
+        Path dataFile = writeData("Here are the tasks in your list:\n1.[T][ ] read [tags: #fun]\n");
+
+        Task task = Storage.loadTasks(dataFile).get(0);
+
+        assertEquals("[T][ ] read [tags: #fun]", task.toString());
+        assertTrue(task.getTags().isEmpty());
+    }
+
+    @Test
+    public void loadTasks_orphanDuplicateOrMalformedTagMetadata_exceptionThrown() throws IOException {
+        assertInvalidSavedTask("@tags #fun");
+        assertInvalidSavedTask("1.[T][ ] read book\n@tags");
+        assertInvalidSavedTask("1.[T][ ] read book\n@tags #fun #Fun");
+        assertInvalidSavedTask("1.[T][ ] read book\n@tags #fun\n@tags #school");
+        assertInvalidSavedTask("1.[T][ ] read book\n\n@tags #fun");
+    }
+
+    @Test
     public void loadTasks_headingAndBlankLines_ignoresNonTaskLines() throws IOException {
         Path dataFile = writeData("Here are the tasks in your list:\n\n1.[T][ ] read book\n");
 
