@@ -54,6 +54,18 @@ Noted. I've removed tags from this task:
 When every requested tag is already present or absent, Edith reports that no tags changed.
 All tags in a command must be valid before Edith changes the task.
 
+## Finding tagged tasks
+
+Use `find #tag` to find tasks with that exact tag, regardless of letter case. For example,
+`find #fun` matches a task tagged `#Fun`, but does not match `#funny` or a description that
+merely contains `#fun`.
+
+Other nonempty searches look for the text in task descriptions and individual tags, without
+regard to case. For example, `find fun` can match a description containing `fun` and tasks
+tagged `#fun` or `#funny`. A query such as `find #fun party` searches for that whole phrase
+in descriptions and tags because the full query is not a valid tag. Matches appear in their
+original order, numbered from 1 within the results.
+
 ## Adding deadlines
 
 // Describe the action and its outcome.

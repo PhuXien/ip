@@ -467,3 +467,61 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case 9: Find exact tags and text within descriptions or tags
+
+**Aim:** Verify exact hashtag matching, plain text substring matching, and result numbering.
+
+**Inputs:**
+```text
+todo plan #fun party
+todo plan holiday /tags #funny
+find #fun
+find fun
+find #fu
+find #fun party
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] plan #fun party
+Now you have 7 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] plan holiday [tags: #funny]
+Now you have 8 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read notes [tags: #fun #travel]
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read notes [tags: #fun #travel]
+2.[T][ ] plan #fun party
+3.[T][ ] plan holiday [tags: #funny]
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] plan #fun party
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
