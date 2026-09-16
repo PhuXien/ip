@@ -193,7 +193,7 @@ ____________________________________________________________
 OOPS!!! Please provide a word or phrase to find. Use: find KEYWORD
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! I don't know what that means. Use todo, deadline, event, list, find, mark, unmark, delete, or bye.
+OOPS!!! I don't know what that means. Use todo, deadline, event, list, find, mark, unmark, delete, tag, untag, or bye.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -263,6 +263,263 @@ Here are the tasks in your list:
 1.[D][ ] return book (by: Dec 02 2019 18:00)
 2.[T][X] join sports club
 3.[T][ ] borrow book
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 5: Create tagged tasks of every type
+
+**Aim:** Verify that optional tags appear after task details and that the numbered list includes them.
+
+**Inputs:**
+```text
+todo read notes /tags #fun #school
+deadline submit work /by 2026-09-20 /tags #school
+event team meeting /from 2026-09-20 /to 2026-09-21 /tags #team
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] read notes [tags: #fun #school]
+Now you have 4 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [D][ ] submit work (by: Sep 20 2026) [tags: #school]
+Now you have 5 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+Now you have 6 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 6: Restore tagged tasks and reject malformed creation
+
+**Aim:** Verify that tags survive a new session and invalid tag input leaves the saved list unchanged.
+
+**Inputs:**
+```text
+todo learn tags /tags #bad!
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #school]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 7: Add and remove tags by full-list number
+
+**Aim:** Verify that tag commands use full-list numbers after find and handle existing or absent tags.
+
+**Inputs:**
+```text
+find notes
+tag 4 #Fun #travel
+tag 4 #FUN
+untag 4 #school #missing
+untag 4 #missing
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read notes [tags: #fun #school]
+____________________________________________________________
+____________________________________________________________
+Got it. I've added tags to this task:
+  [T][ ] read notes [tags: #fun #school #travel]
+____________________________________________________________
+____________________________________________________________
+No tags were added; this task already has them:
+  [T][ ] read notes [tags: #fun #school #travel]
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed tags from this task:
+  [T][ ] read notes [tags: #fun #travel]
+____________________________________________________________
+____________________________________________________________
+No tags were removed; this task does not have them:
+  [T][ ] read notes [tags: #fun #travel]
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #travel]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 8: Reject invalid tag changes and restore the list
+
+**Aim:** Verify that malformed, incomplete, and out-of-range commands do not alter restored tasks.
+
+**Inputs:**
+```text
+tag 4 #new #bad!
+untag 4
+tag 9 #fun
+list
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide at least one tag. Use: untag NUMBER #tag [#tag ...]
+____________________________________________________________
+____________________________________________________________
+OOPS!!! Please provide a task number from 1 to 6.
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[D][ ] return book (by: Dec 02 2019 18:00)
+2.[T][X] join sports club
+3.[T][ ] borrow book
+4.[T][ ] read notes [tags: #fun #travel]
+5.[D][ ] submit work (by: Sep 20 2026) [tags: #school]
+6.[E][ ] team meeting (from: Sep 20 2026 to: Sep 21 2026) [tags: #team]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Test case 9: Find exact tags and text within descriptions or tags
+
+**Aim:** Verify exact hashtag matching, plain text substring matching, and result numbering.
+
+**Inputs:**
+```text
+todo plan #fun party
+todo plan holiday /tags #funny
+find #fun
+find fun
+find #fu
+find #fun party
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] plan #fun party
+Now you have 7 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] plan holiday [tags: #funny]
+Now you have 8 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read notes [tags: #fun #travel]
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read notes [tags: #fun #travel]
+2.[T][ ] plan #fun party
+3.[T][ ] plan holiday [tags: #funny]
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] plan #fun party
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!

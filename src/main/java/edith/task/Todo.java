@@ -18,6 +18,11 @@ public class Todo extends Task {
      */
     @Override
     public String toString() {
+        return toStorageString() + getTagSuffix();
+    }
+
+    @Override
+    public String toStorageString() {
         return "[T]" + getStatusIcon() + " " + getDescription();
     }
 

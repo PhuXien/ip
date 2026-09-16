@@ -31,6 +31,11 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
+        return toStorageString() + getTagSuffix();
+    }
+
+    @Override
+    public String toStorageString() {
         return "[D]" + getStatusIcon() + " " + getDescription()
                 + " (by: " + DateFormatter.formatForDisplay(by, hasTime) + ")";
     }

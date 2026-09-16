@@ -70,15 +70,25 @@ public class TaskList {
     }
 
     /**
-     * Returns tasks whose descriptions contain the supplied search text, ignoring letter case.
+     * Returns tasks matching a tag exactly or containing the supplied text in a description or tag.
+     * A valid tag used as the entire query selects exact tag matching. All matching ignores letter case.
      *
      * @param keyword the word or phrase to search for
      * @return matching tasks in their original list order
      */
     public TaskList find(String keyword) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        boolean isExactTagSearch = Task.isValidTag(keyword);
         List<Task> matches = tasks.stream()
-                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .filter(task -> {
+                    if (isExactTagSearch) {
+                        return task.getTags().stream()
+                                .anyMatch(tag -> tag.toLowerCase(Locale.ROOT).equals(normalizedKeyword));
+                    }
+                    return task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)
+                            || task.getTags().stream()
+                                    .anyMatch(tag -> tag.toLowerCase(Locale.ROOT).contains(normalizedKeyword));
+                })
                 .toList();
         return new TaskList(matches);
     }

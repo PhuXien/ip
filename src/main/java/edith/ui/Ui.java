@@ -155,4 +155,20 @@ public class Ui {
                 "  " + task,
                 "Now you have " + taskCount + " tasks in the list.");
     }
+
+    /** Displays a tagged task or explains that every requested tag was already present. */
+    public void showTagsAdded(Task task, boolean hasChanged) {
+        String confirmation = hasChanged
+                ? "Got it. I've added tags to this task:"
+                : "No tags were added; this task already has them:";
+        showLines(confirmation, "  " + task);
+    }
+
+    /** Displays a task after tag removal or explains that none of the requested tags was present. */
+    public void showTagsRemoved(Task task, boolean hasChanged) {
+        String confirmation = hasChanged
+                ? "Noted. I've removed tags from this task:"
+                : "No tags were removed; this task does not have them:";
+        showLines(confirmation, "  " + task);
+    }
 }

@@ -12,7 +12,7 @@ public enum CommandType {
     EVENT("event", true),
     /** Displays the current task list. */
     LIST("list", false),
-    /** Finds tasks from current task list with corresponding matching characters/words*/
+    /** Finds tasks whose descriptions match the supplied search text. */
     FIND("find", true),
     /** Marks a task as completed. */
     MARK("mark", true),
@@ -20,6 +20,10 @@ public enum CommandType {
     UNMARK("unmark", true),
     /** Removes a task from the task list. */
     DELETE("delete", true),
+    /** Adds tags to a task in the current list. */
+    TAG("tag", true),
+    /** Removes tags from a task in the current list. */
+    UNTAG("untag", true),
     /** Ends the current Edith session. */
     BYE("bye", false);
 

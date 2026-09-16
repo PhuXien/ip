@@ -75,4 +75,50 @@ public class TaskListTest {
         assertEquals(1, phraseMatches.size());
         assertEquals("[T][ ] Read Book", phraseMatches.get(0).toString());
     }
+
+    @Test
+    public void find_validTagQuery_matchesOnlyExactTagsIgnoringCase() {
+        Todo tagged = new Todo("read notes");
+        tagged.addTag("#Fun");
+        Todo longerTag = new Todo("plan holiday");
+        longerTag.addTag("#funny");
+        TaskList tasks = new TaskList(List.of(
+                new Todo("plan #fun party"), tagged, longerTag));
+
+        TaskList matches = tasks.find("#FUN");
+
+        assertEquals(1, matches.size());
+        assertSame(tagged, matches.get(0));
+        assertTrue(tasks.find("#fu").isEmpty());
+    }
+
+    @Test
+    public void find_plainText_matchesDescriptionsAndTagsInOriginalOrder() {
+        Todo tagged = new Todo("read notes");
+        tagged.addTag("#Fun");
+        Todo longerTag = new Todo("plan holiday");
+        longerTag.addTag("#funny");
+        Todo described = new Todo("plan #fun party");
+        TaskList tasks = new TaskList(List.of(tagged, described, longerTag));
+
+        TaskList matches = tasks.find("fun");
+
+        assertEquals(3, matches.size());
+        assertSame(tagged, matches.get(0));
+        assertSame(described, matches.get(1));
+        assertSame(longerTag, matches.get(2));
+    }
+
+    @Test
+    public void find_hashPhrase_matchesDescriptionAsPlainText() {
+        Todo described = new Todo("plan #fun party");
+        Todo tagged = new Todo("plan holiday");
+        tagged.addTag("#fun");
+        TaskList tasks = new TaskList(List.of(tagged, described));
+
+        TaskList matches = tasks.find("#fun party");
+
+        assertEquals(1, matches.size());
+        assertSame(described, matches.get(0));
+    }
 }

@@ -40,6 +40,11 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
+        return toStorageString() + getTagSuffix();
+    }
+
+    @Override
+    public String toStorageString() {
         return "[E]" + getStatusIcon() + " " + getDescription()
                 + " (from: " + DateFormatter.formatForDisplay(from, hasStartTime)
                 + " to: " + DateFormatter.formatForDisplay(to, hasEndTime) + ")";
