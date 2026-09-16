@@ -36,6 +36,7 @@ public class MarkCommand extends Command {
 
         Task task = tasks.get(taskNumber - 1);
         task.markAsDone();
+        assert "[X]".equals(task.getStatusIcon()) : "A marked task must display as completed";
         saveTasks(tasks);
         ui.showTaskMarked(task, true);
     }

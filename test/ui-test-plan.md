@@ -1,6 +1,6 @@
 # UI Test Plan
 
-<!-- test-ui-run: java -cp build/classes edith.Edith -->
+<!-- test-ui-run: java -ea -cp build/classes/java/main edith.Edith -->
 
 Run `.\gradlew.bat compileJava` with Java 25 before executing this plan. Begin with no `data/` directory. Each case starts a fresh application session; later cases intentionally retain the data saved by earlier cases to test persistence.
 
