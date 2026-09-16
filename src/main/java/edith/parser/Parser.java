@@ -19,6 +19,13 @@ import edith.util.DateFormatter;
 
 /** Interprets user commands and creates the tasks described by them. */
 public class Parser {
+    private static final String DEADLINE_USAGE = "deadline DESCRIPTION /by yyyy-MM-dd [HHmm]";
+    private static final String EVENT_USAGE = "event DESCRIPTION /from yyyy-MM-dd [HHmm] "
+            + "/to yyyy-MM-dd [HHmm]";
+    private static final String DEADLINE_DATE_MARKER = "/by";
+    private static final String EVENT_START_MARKER = "/from";
+    private static final String EVENT_END_MARKER = "/to";
+
     /**
      * Parses complete user input into an executable command.
      *
@@ -67,21 +74,18 @@ public class Parser {
     /** Parses a deadline command into a task. */
     private static Task parseDeadline(String command) throws EdithException {
         String details = command.substring(CommandType.DEADLINE.getKeyword().length()).trim();
-        int byMarker = details.indexOf("/by");
+        int byMarker = details.indexOf(DEADLINE_DATE_MARKER);
         if (byMarker < 0) {
-            throw new EdithException("A deadline needs a description and due date. Use: deadline DESCRIPTION "
-                    + "/by yyyy-MM-dd [HHmm]");
+            throw new EdithException("A deadline needs a description and due date. Use: " + DEADLINE_USAGE);
         }
 
         String description = details.substring(0, byMarker).trim();
-        String by = details.substring(byMarker + "/by".length()).trim();
+        String by = details.substring(byMarker + DEADLINE_DATE_MARKER.length()).trim();
         if (description.isEmpty()) {
-            throw new EdithException("The description of a deadline cannot be empty. Use: deadline DESCRIPTION "
-                    + "/by yyyy-MM-dd [HHmm]");
+            throw new EdithException("The description of a deadline cannot be empty. Use: " + DEADLINE_USAGE);
         }
         if (by.isEmpty()) {
-            throw new EdithException("A deadline needs a due date after /by. Use: deadline DESCRIPTION "
-                    + "/by yyyy-MM-dd [HHmm]");
+            throw new EdithException("A deadline needs a due date after /by. Use: " + DEADLINE_USAGE);
         }
         DateFormatter.ParsedDateTime dueDateTime = parseDateTime(by, "deadline");
         return new Deadline(description, dueDateTime.value(), dueDateTime.hasTime());
@@ -90,27 +94,23 @@ public class Parser {
     /** Parses an event command into a task. */
     private static Task parseEvent(String command) throws EdithException {
         String details = command.substring(CommandType.EVENT.getKeyword().length()).trim();
-        int fromMarker = details.indexOf("/from");
-        int toMarker = details.indexOf("/to");
+        int fromMarker = details.indexOf(EVENT_START_MARKER);
+        int toMarker = details.indexOf(EVENT_END_MARKER);
         if (fromMarker < 0 || toMarker < 0 || toMarker < fromMarker) {
-            throw new EdithException("An event needs a description, start date, and end date. Use: event DESCRIPTION "
-                    + "/from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]");
+            throw new EdithException("An event needs a description, start date, and end date. Use: " + EVENT_USAGE);
         }
 
         String description = details.substring(0, fromMarker).trim();
-        String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
-        String to = details.substring(toMarker + "/to".length()).trim();
+        String from = details.substring(fromMarker + EVENT_START_MARKER.length(), toMarker).trim();
+        String to = details.substring(toMarker + EVENT_END_MARKER.length()).trim();
         if (description.isEmpty()) {
-            throw new EdithException("The description of an event cannot be empty. Use: event DESCRIPTION "
-                    + "/from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]");
+            throw new EdithException("The description of an event cannot be empty. Use: " + EVENT_USAGE);
         }
         if (from.isEmpty()) {
-            throw new EdithException("An event needs a start date after /from. Use: event DESCRIPTION "
-                    + "/from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]");
+            throw new EdithException("An event needs a start date after /from. Use: " + EVENT_USAGE);
         }
         if (to.isEmpty()) {
-            throw new EdithException("An event needs an end date after /to. Use: event DESCRIPTION "
-                    + "/from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]");
+            throw new EdithException("An event needs an end date after /to. Use: " + EVENT_USAGE);
         }
         DateFormatter.ParsedDateTime startDateTime = parseDateTime(from, "event start");
         DateFormatter.ParsedDateTime endDateTime = parseDateTime(to, "event end");

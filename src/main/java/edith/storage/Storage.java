@@ -18,6 +18,9 @@ import edith.util.DateFormatter;
 public class Storage {
     /** The heading used by both the console task list and the saved file. */
     private static final String LIST_HEADING = "Here are the tasks in your list:";
+    private static final String DEADLINE_DATE_SEPARATOR = " (by: ";
+    private static final String EVENT_START_SEPARATOR = " (from: ";
+    private static final String EVENT_END_SEPARATOR = " to: ";
 
     /** A portable path relative to the directory from which Edith is started. */
     private static final Path DATA_FILE = Path.of("data", "edith.txt");
@@ -124,13 +127,14 @@ public class Storage {
 
     /** Restores the description and due date-time from a saved deadline. */
     private static Task parseDeadline(String text, String savedLine) throws IOException {
-        int byMarker = text.lastIndexOf(" (by: ");
+        int byMarker = text.lastIndexOf(DEADLINE_DATE_SEPARATOR);
         if (byMarker < 0 || !text.endsWith(")")) {
             throw new IOException("Invalid saved task: " + savedLine);
         }
         try {
             DateFormatter.ParsedDateTime dueDateTime =
-                    DateFormatter.parseDisplayedDateTime(text.substring(byMarker + 6, text.length() - 1));
+                    DateFormatter.parseDisplayedDateTime(
+                            text.substring(byMarker + DEADLINE_DATE_SEPARATOR.length(), text.length() - 1));
             return new Deadline(text.substring(0, byMarker), dueDateTime.value(), dueDateTime.hasTime());
         } catch (DateTimeParseException e) {
             throw new IOException("Invalid saved task: " + savedLine, e);
@@ -139,16 +143,18 @@ public class Storage {
 
     /** Restores the description, start date-time, and end date-time from a saved event. */
     private static Task parseEvent(String text, String savedLine) throws IOException {
-        int fromMarker = text.lastIndexOf(" (from: ");
-        int toMarker = text.lastIndexOf(" to: ");
+        int fromMarker = text.lastIndexOf(EVENT_START_SEPARATOR);
+        int toMarker = text.lastIndexOf(EVENT_END_SEPARATOR);
         if (fromMarker < 0 || toMarker < fromMarker || !text.endsWith(")")) {
             throw new IOException("Invalid saved task: " + savedLine);
         }
         try {
             DateFormatter.ParsedDateTime startDateTime =
-                    DateFormatter.parseDisplayedDateTime(text.substring(fromMarker + 8, toMarker));
+                    DateFormatter.parseDisplayedDateTime(
+                            text.substring(fromMarker + EVENT_START_SEPARATOR.length(), toMarker));
             DateFormatter.ParsedDateTime endDateTime =
-                    DateFormatter.parseDisplayedDateTime(text.substring(toMarker + 5, text.length() - 1));
+                    DateFormatter.parseDisplayedDateTime(
+                            text.substring(toMarker + EVENT_END_SEPARATOR.length(), text.length() - 1));
             return new Event(text.substring(0, fromMarker), startDateTime.value(), startDateTime.hasTime(),
                     endDateTime.value(), endDateTime.hasTime());
         } catch (DateTimeParseException e) {
