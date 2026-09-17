@@ -14,6 +14,7 @@ public class Edith {
     private final StringBuilder responseBuffer;
     private final Ui ui;
     private boolean isExit;
+    private boolean hasLoadingError;
     private TaskList tasks;
 
     /** Creates an Edith application with a console user interface. */
@@ -41,6 +42,9 @@ public class Edith {
     public void run() {
         ui.showWelcome();
         tasks = loadTasks();
+        if (hasLoadingError) {
+            return;
+        }
         while (!isExit && ui.hasNextCommand()) {
             String command = ui.readCommand();
             ui.showDivider();
@@ -68,6 +72,10 @@ public class Edith {
             throw new IllegalStateException("getResponse is available only on GUI-configured instances.");
         }
         responseBuffer.setLength(0);
+        if (hasLoadingError) {
+            ui.showLoadingError();
+            return responseBuffer.toString().stripTrailing();
+        }
         try {
             Command parsedCommand = Parser.parse(input);
             parsedCommand.execute(tasks, ui);
@@ -105,6 +113,7 @@ public class Edith {
         try {
             return new TaskList(Storage.loadTasks());
         } catch (IOException e) {
+            hasLoadingError = true;
             ui.showLoadingError();
             return new TaskList();
         }

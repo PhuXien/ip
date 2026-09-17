@@ -51,6 +51,10 @@ public class Parser {
      * @throws EdithException if the command or its arguments are invalid
      */
     public static Command parse(String command) throws EdithException {
+        if (command == null) {
+            throw new EdithException("Please enter a command.");
+        }
+        command = command.trim();
         CommandType commandType = CommandType.fromInput(command);
         if (commandType == null) {
             throw new EdithException("I don't know what that means. Use todo, deadline, event, list, find, "
@@ -103,6 +107,10 @@ public class Parser {
 
         String description = details.substring(0, byMarker).trim();
         String by = details.substring(byMarker + DEADLINE_DATE_MARKER.length()).trim();
+        if (!isStandaloneMarker(details, byMarker, DEADLINE_DATE_MARKER)
+                || details.indexOf(DEADLINE_DATE_MARKER, byMarker + DEADLINE_DATE_MARKER.length()) >= 0) {
+            throw new EdithException("A deadline needs exactly one /by marker. Use: " + DEADLINE_USAGE);
+        }
         if (description.isEmpty()) {
             throw new EdithException("The description of a deadline cannot be empty. Use: " + DEADLINE_USAGE);
         }
@@ -123,6 +131,12 @@ public class Parser {
         if (fromMarker < 0 || toMarker < 0 || toMarker < fromMarker) {
             throw new EdithException("An event needs a description, start date, and end date. Use: " + EVENT_USAGE);
         }
+        if (!isStandaloneMarker(details, fromMarker, EVENT_START_MARKER)
+                || !isStandaloneMarker(details, toMarker, EVENT_END_MARKER)
+                || details.indexOf(EVENT_START_MARKER, fromMarker + EVENT_START_MARKER.length()) >= 0
+                || details.indexOf(EVENT_END_MARKER, toMarker + EVENT_END_MARKER.length()) >= 0) {
+            throw new EdithException("An event needs exactly one /from and one /to marker. Use: " + EVENT_USAGE);
+        }
 
         String description = details.substring(0, fromMarker).trim();
         String from = details.substring(fromMarker + EVENT_START_MARKER.length(), toMarker).trim();
@@ -138,6 +152,9 @@ public class Parser {
         }
         DateFormatter.ParsedDateTime startDateTime = parseDateTime(from, "event start");
         DateFormatter.ParsedDateTime endDateTime = parseDateTime(to, "event end");
+        if (!startDateTime.value().isBefore(endDateTime.value())) {
+            throw new EdithException("The event start must be before its end.");
+        }
         return addTags(new Event(description, startDateTime.value(), startDateTime.hasTime(),
                 endDateTime.value(), endDateTime.hasTime()), taggedDetails.tags());
     }
@@ -148,6 +165,11 @@ public class Parser {
         if (!marker.find()) {
             return new TaskDetails(details, List.of());
         }
+        if (marker.find()) {
+            throw new EdithException("Please specify /tags only once.");
+        }
+        marker.reset();
+        marker.find();
 
         String taskText = details.substring(0, marker.start()).trim();
         String tagText = details.substring(marker.end()).trim();
@@ -159,6 +181,13 @@ public class Parser {
             validateTag(tag);
         }
         return new TaskDetails(taskText, tags);
+    }
+
+    /** Returns whether a marker is separated from its description and value by whitespace. */
+    private static boolean isStandaloneMarker(String text, int index, String marker) {
+        return (index == 0 || Character.isWhitespace(text.charAt(index - 1)))
+                && (index + marker.length() == text.length()
+                        || Character.isWhitespace(text.charAt(index + marker.length())));
     }
 
     /** Parses a command that adds tags after validating its complete argument list. */

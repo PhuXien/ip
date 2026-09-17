@@ -30,6 +30,17 @@ public class TaskListTest {
     }
 
     @Test
+    public void containsEquivalent_ignoresCompletionAndTagsButChecksTaskDetails() {
+        Todo existing = new Todo("read book");
+        existing.markAsDone();
+        existing.addTag("#school");
+        TaskList tasks = new TaskList(List.of(existing));
+
+        assertTrue(tasks.containsEquivalent(new Todo("read book")));
+        assertFalse(tasks.containsEquivalent(new Todo("read notes")));
+    }
+
+    @Test
     public void constructor_sourceListChanged_taskListUnaffected() {
         List<Task> source = new ArrayList<>();
         source.add(new Todo("original"));

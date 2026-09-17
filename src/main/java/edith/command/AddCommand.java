@@ -27,6 +27,9 @@ public class AddCommand extends Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui) throws EdithException {
+        if (tasks.containsEquivalent(task)) {
+            throw new EdithException("That task already exists in your list.");
+        }
         int previousSize = tasks.size();
         tasks.add(task);
         assert tasks.size() == previousSize + 1 && tasks.get(previousSize) == task

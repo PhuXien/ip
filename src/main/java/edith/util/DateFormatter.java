@@ -3,6 +3,7 @@ package edith.util;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.Locale;
 
 /** Converts task dates between Edith's command, display, and saved-file formats. */
@@ -10,13 +11,14 @@ public final class DateFormatter {
     /** The ISO date format accepted in commands. */
     private static final DateTimeFormatter DATE_INPUT_FORMAT = DateTimeFormatter.ISO_LOCAL_DATE;
     /** The ISO date-time format accepted in commands. */
-    private static final DateTimeFormatter DATE_TIME_INPUT_FORMAT = DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm");
+    private static final DateTimeFormatter DATE_TIME_INPUT_FORMAT = DateTimeFormatter.ofPattern("uuuu-MM-dd HHmm")
+            .withResolverStyle(ResolverStyle.STRICT);
     /** The readable date format used in task lists and saved tasks. */
     private static final DateTimeFormatter DATE_DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
+            DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH).withResolverStyle(ResolverStyle.STRICT);
     /** The readable date-time format used in task lists and saved tasks. */
     private static final DateTimeFormatter DATE_TIME_DISPLAY_FORMAT =
-            DateTimeFormatter.ofPattern("MMM dd uuuu HH:mm", Locale.ENGLISH);
+            DateTimeFormatter.ofPattern("MMM dd uuuu HH:mm", Locale.ENGLISH).withResolverStyle(ResolverStyle.STRICT);
 
     private DateFormatter() {
     }

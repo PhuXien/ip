@@ -20,6 +20,25 @@ import edith.exception.EdithException;
 /** Tests translation of user input into executable commands. */
 public class ParserTest {
     @Test
+    public void parse_whitespaceAndRepeatedMarkers_handlesOrRejectsInput() throws EdithException {
+        assertInstanceOf(AddCommand.class, Parser.parse("  todo   read book  "));
+        assertThrows(EdithException.class, () ->
+                Parser.parse("deadline report /by 2026-09-20 /by 2026-09-21"));
+        assertThrows(EdithException.class, () ->
+                Parser.parse("event meeting /from 2026-09-20 /to 2026-09-21 /to 2026-09-22"));
+        assertThrows(EdithException.class, () -> Parser.parse("todo book /tags #a /tags #b"));
+    }
+
+    @Test
+    public void parse_eventWithNonIncreasingOrInvalidDates_rejectsInput() {
+        assertThrows(EdithException.class, () ->
+                Parser.parse("event meeting /from 2026-09-21 /to 2026-09-20"));
+        assertThrows(EdithException.class, () ->
+                Parser.parse("event meeting /from 2026-09-20 /to 2026-09-20"));
+        assertThrows(EdithException.class, () ->
+                Parser.parse("deadline report /by 2026-02-30 1200"));
+    }
+    @Test
     public void parse_validCommands_returnsExpectedCommandTypes() throws EdithException {
         assertInstanceOf(AddCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(AddCommand.class, Parser.parse("deadline submit work /by 2026-09-06"));
