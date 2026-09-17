@@ -31,18 +31,6 @@
     -fx-text-fill: white;
 }
 
-.avatar {
-    -fx-background-color: #1f2a44;
-    -fx-background-radius: 22;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-}
-
-.user-dialog .avatar {
-    -fx-background-color: #8791a5;
-}
-
 .composer {
     -fx-background-color: white;
     -fx-border-color: #dfe3eb;
