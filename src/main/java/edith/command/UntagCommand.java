@@ -40,6 +40,7 @@ public class UntagCommand extends Command {
         }
 
         Task task = tasks.get(taskNumber - 1);
+        List<String> previousTags = task.getTags();
         boolean hasChanged = false;
         for (String tag : tags) {
             if (task.removeTag(tag)) {
@@ -47,7 +48,7 @@ public class UntagCommand extends Command {
             }
         }
         if (hasChanged) {
-            saveTasks(tasks);
+            saveTasks(tasks, () -> task.restoreTags(previousTags));
         }
         ui.showTagsRemoved(task, hasChanged);
     }

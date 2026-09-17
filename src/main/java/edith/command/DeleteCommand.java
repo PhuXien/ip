@@ -39,7 +39,7 @@ public class DeleteCommand extends Command {
         Task removedTask = tasks.remove(taskNumber - 1);
         assert tasks.size() == previousSize - 1 && removedTask == selectedTask
                 : "Deleting a task must remove exactly the selected task";
-        saveTasks(tasks);
+        saveTasks(tasks, () -> tasks.add(taskNumber - 1, removedTask));
         ui.showTaskDeleted(removedTask, tasks.size());
     }
 }

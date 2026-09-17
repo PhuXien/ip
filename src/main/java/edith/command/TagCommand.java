@@ -40,6 +40,7 @@ public class TagCommand extends Command {
         }
 
         Task task = tasks.get(taskNumber - 1);
+        List<String> previousTags = task.getTags();
         boolean hasChanged = false;
         for (String tag : tags) {
             if (task.addTag(tag)) {
@@ -47,7 +48,7 @@ public class TagCommand extends Command {
             }
         }
         if (hasChanged) {
-            saveTasks(tasks);
+            saveTasks(tasks, () -> task.restoreTags(previousTags));
         }
         ui.showTagsAdded(task, hasChanged);
     }

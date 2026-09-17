@@ -2,6 +2,7 @@ package edith.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -48,5 +49,58 @@ public class TaskCommandValidationTest {
         assertEquals("Please provide a task number from 1 to 1.",
                 assertThrows(EdithException.class, () -> new UntagCommand(0, List.of("#fun"))
                         .execute(tasks, null)).getMessage());
+    }
+
+    @Test
+    public void execute_saveFailure_restoresAddedTask() {
+        TaskList tasks = new TaskList();
+        AddCommand command = new AddCommand(new Todo("read book")) {
+            @Override
+            protected void saveTasks(TaskList changedTasks) throws EdithException {
+                throw new EdithException("Save failed.");
+            }
+        };
+
+        assertThrows(EdithException.class, () -> command.execute(tasks, null));
+        assertTrue(tasks.isEmpty());
+    }
+
+    @Test
+    public void execute_saveFailure_restoresDeletedTaskAtOriginalPosition() {
+        TaskList tasks = new TaskList(List.of(new Todo("first"), new Todo("second")));
+        DeleteCommand command = new DeleteCommand(1) {
+            @Override
+            protected void saveTasks(TaskList changedTasks) throws EdithException {
+                throw new EdithException("Save failed.");
+            }
+        };
+
+        assertThrows(EdithException.class, () -> command.execute(tasks, null));
+        assertEquals(List.of("[T][ ] first", "[T][ ] second"),
+                tasks.asList().stream().map(Object::toString).toList());
+    }
+
+    @Test
+    public void execute_saveFailure_restoresStatusAndTagOrder() {
+        Todo task = new Todo("read book");
+        task.addTag("#first");
+        task.addTag("#second");
+        TaskList tasks = new TaskList(List.of(task));
+        MarkCommand markCommand = new MarkCommand(1) {
+            @Override
+            protected void saveTasks(TaskList changedTasks) throws EdithException {
+                throw new EdithException("Save failed.");
+            }
+        };
+        UntagCommand untagCommand = new UntagCommand(1, List.of("#first")) {
+            @Override
+            protected void saveTasks(TaskList changedTasks) throws EdithException {
+                throw new EdithException("Save failed.");
+            }
+        };
+
+        assertThrows(EdithException.class, () -> markCommand.execute(tasks, null));
+        assertThrows(EdithException.class, () -> untagCommand.execute(tasks, null));
+        assertEquals("[T][ ] read book [tags: #first #second]", task.toString());
     }
 }

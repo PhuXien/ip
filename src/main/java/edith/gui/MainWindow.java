@@ -56,6 +56,9 @@ public class MainWindow extends AnchorPane {
         this.edith = edith;
         dialogContainer.getChildren().add(
                 DialogBox.getEdithDialog(WELCOME_MESSAGE));
+        if (!edith.getStartupError().isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getEdithDialog(edith.getStartupError()));
+        }
     }
 
     /** Sends nonblank input to Edith and appends both sides of the exchange. */

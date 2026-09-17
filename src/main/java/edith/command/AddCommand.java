@@ -34,7 +34,7 @@ public class AddCommand extends Command {
         tasks.add(task);
         assert tasks.size() == previousSize + 1 && tasks.get(previousSize) == task
                 : "Adding a task must append exactly that task";
-        saveTasks(tasks);
+        saveTasks(tasks, () -> tasks.remove(previousSize));
         ui.showTaskAdded(task, tasks.size());
     }
 }

@@ -104,6 +104,18 @@ public abstract class Task {
         return List.copyOf(tags.values());
     }
 
+    /**
+     * Restores the exact tags and their order after an unsuccessful save.
+     *
+     * @param previousTags the tags from before the failed change
+     */
+    public void restoreTags(List<String> previousTags) {
+        tags.clear();
+        for (String tag : previousTags) {
+            addTag(tag);
+        }
+    }
+
     /** Returns the visible tag suffix, or an empty string when the task has no tags. */
     protected String getTagSuffix() {
         return tags.isEmpty() ? "" : " [tags: " + String.join(" ", tags.values()) + "]";

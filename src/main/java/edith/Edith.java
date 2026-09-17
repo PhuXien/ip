@@ -38,6 +38,14 @@ public class Edith {
         return new Edith(new StringBuilder());
     }
 
+    /** Returns a loading error to display when the graphical window opens, if one occurred. */
+    public String getStartupError() {
+        if (responseBuffer == null) {
+            throw new IllegalStateException("getStartupError is available only on GUI-configured instances.");
+        }
+        return responseBuffer.toString().stripTrailing();
+    }
+
     /** Starts Edith's command-processing loop. */
     public void run() {
         ui.showWelcome();

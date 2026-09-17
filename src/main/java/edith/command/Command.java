@@ -40,4 +40,20 @@ public abstract class Command {
             throw new EdithException("I could not save your tasks to disk.");
         }
     }
+
+    /**
+     * Restores an in-memory change when saving it fails.
+     *
+     * @param tasks the changed task list to save
+     * @param rollback action that restores the list to its previous state
+     * @throws EdithException if the task list cannot be saved
+     */
+    protected void saveTasks(TaskList tasks, Runnable rollback) throws EdithException {
+        try {
+            saveTasks(tasks);
+        } catch (EdithException e) {
+            rollback.run();
+            throw e;
+        }
+    }
 }

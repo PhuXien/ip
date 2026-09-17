@@ -31,6 +31,16 @@ public class TaskList {
         tasks.add(task);
     }
 
+    /**
+     * Inserts a task at a zero-based position when a failed deletion is undone.
+     *
+     * @param index the position at which to insert the task
+     * @param task the task to restore
+     */
+    public void add(int index, Task task) {
+        tasks.add(index, task);
+    }
+
     /** Returns whether a task with the same type, description, and dates already exists. */
     public boolean containsEquivalent(Task candidate) {
         return tasks.stream().anyMatch(task -> task.getClass() == candidate.getClass()

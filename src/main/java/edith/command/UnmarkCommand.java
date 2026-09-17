@@ -35,9 +35,14 @@ public class UnmarkCommand extends Command {
         }
 
         Task task = tasks.get(taskNumber - 1);
+        boolean wasDone = "[X]".equals(task.getStatusIcon());
         task.markAsNotDone();
         assert "[ ]".equals(task.getStatusIcon()) : "An unmarked task must display as incomplete";
-        saveTasks(tasks);
+        saveTasks(tasks, () -> {
+            if (wasDone) {
+                task.markAsDone();
+            }
+        });
         ui.showTaskMarked(task, false);
     }
 }
