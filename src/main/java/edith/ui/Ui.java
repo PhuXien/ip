@@ -82,9 +82,9 @@ public class Ui {
         output.accept("OOPS!!! " + exception.getMessage());
     }
 
-    /** Displays a warning that saved tasks could not be restored. */
+    /** Explains that saved tasks could not be restored and will not be overwritten. */
     public void showLoadingError() {
-        output.accept("OOPS!!! I could not load your saved tasks. Starting with an empty list.");
+        output.accept("OOPS!!! I could not load your saved tasks. Fix the data file before using Edith.");
     }
 
     /**

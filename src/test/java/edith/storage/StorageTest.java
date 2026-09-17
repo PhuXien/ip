@@ -122,6 +122,17 @@ public class StorageTest {
     public void loadTasks_malformedEvent_exceptionThrown() throws IOException {
         assertInvalidSavedTask("1.[E][ ] meeting (from: Sep 06 2026)");
         assertInvalidSavedTask("1.[E][ ] meeting (from: tomorrow to: Sep 07 2026)");
+        assertInvalidSavedTask("1.[E][ ] meeting (from: Sep 07 2026 to: Sep 06 2026)");
+        assertInvalidSavedTask("1.[E][ ] meeting (from: Sep 06 2026 to: Sep 06 2026)");
+    }
+
+    @Test
+    public void loadTasks_duplicateOrEmptyTasks_exceptionThrown() throws IOException {
+        assertInvalidSavedTask("1.[T][ ] read book\n2.[T][X] read book");
+        assertInvalidSavedTask("1.[T][ ] ");
+        assertInvalidSavedTask("1.[D][ ]  (by: Sep 06 2026)");
+        assertInvalidSavedTask("2.[T][ ] first");
+        assertInvalidSavedTask("1.[T][ ] first\n3.[T][ ] second");
     }
 
     /** Writes one complete temporary data file. */

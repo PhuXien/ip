@@ -525,3 +525,50 @@ ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
+
+## Test case 10: Reject invalid commands and duplicate tasks
+
+**Aim:** Verify invalid dates, repeated parameters, and a duplicate task leave the saved list unchanged.
+
+**Inputs:**
+```text
+  todo   unique errand  
+todo unique errand
+event bad meeting /from 2026-09-21 /to 2026-09-20
+deadline report /by 2026-02-30
+deadline report /by 2026-09-20 /by 2026-09-21
+bye
+```
+
+**Expected output:**
+```text
+ _____ ____ ___ _____ _   _
+| ____|  _ \_ _|_   _| | | |
+|  _| | | | | |  | | | |_| |
+| |___| |_| | |  | | |  _  |
+|_____|____/___| |_| |_| |_|
+
+Hello! I'm EDITH.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Got it. I've added this task:
+  [T][ ] unique errand
+Now you have 9 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! That task already exists in your list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The event start must be before its end.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The deadline date must use yyyy-MM-dd, optionally followed by a time in the format HHmm.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! A deadline needs exactly one /by marker. Use: deadline DESCRIPTION /by yyyy-MM-dd [HHmm]
+____________________________________________________________
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```

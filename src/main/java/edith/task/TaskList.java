@@ -31,6 +31,12 @@ public class TaskList {
         tasks.add(task);
     }
 
+    /** Returns whether a task with the same type, description, and dates already exists. */
+    public boolean containsEquivalent(Task candidate) {
+        return tasks.stream().anyMatch(task -> task.getClass() == candidate.getClass()
+                && task.toStorageString().substring(6).equals(candidate.toStorageString().substring(6)));
+    }
+
     /**
      * Returns the task at the given zero-based index.
      *

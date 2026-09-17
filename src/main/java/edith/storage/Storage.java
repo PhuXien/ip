@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.StandardCopyOption;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 import edith.task.Deadline;
 import edith.task.Event;
 import edith.task.Task;
+import edith.task.TaskList;
 import edith.task.Todo;
 import edith.util.DateFormatter;
 
@@ -50,7 +53,9 @@ public class Storage {
         }
 
         Task latestTask = null;
+        TaskList seenTasks = new TaskList();
         boolean isTagLineAllowed = false;
+        int expectedTaskNumber = 1;
         for (String line : Files.readAllLines(dataFile, StandardCharsets.UTF_8)) {
             if (line.isBlank() || line.equals(LIST_HEADING)) {
                 isTagLineAllowed = false;
@@ -65,8 +70,16 @@ public class Storage {
                 continue;
             }
 
+            if (!line.startsWith(expectedTaskNumber + ".")) {
+                throw new IOException("Invalid saved task number: " + line);
+            }
             latestTask = parseTask(line);
+            if (seenTasks.containsEquivalent(latestTask)) {
+                throw new IOException("Duplicate saved task: " + line);
+            }
+            seenTasks.add(latestTask);
             tasks.add(latestTask);
+            expectedTaskNumber++;
             isTagLineAllowed = true;
         }
         return tasks;
@@ -100,7 +113,18 @@ public class Storage {
                 lines.add(TAG_LINE_PREFIX + String.join(" ", task.getTags()));
             }
         }
-        Files.write(dataFile, lines, StandardCharsets.UTF_8);
+        Path temporaryFile = Files.createTempFile(dataFile.getParent(), "edith-", ".tmp");
+        try {
+            Files.write(temporaryFile, lines, StandardCharsets.UTF_8);
+            try {
+                Files.move(temporaryFile, dataFile, StandardCopyOption.ATOMIC_MOVE,
+                        StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temporaryFile, dataFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporaryFile);
+        }
     }
 
     /** Restores and validates the tag metadata adjacent to a saved task line. */
@@ -125,7 +149,7 @@ public class Storage {
      */
     private static Task parseTask(String savedLine) throws IOException {
         int numberSeparator = savedLine.indexOf('.');
-        if (numberSeparator < 1) {
+        if (numberSeparator < 1 || !savedLine.substring(0, numberSeparator).matches("[1-9][0-9]*")) {
             throw new IOException("Invalid saved task: " + savedLine);
         }
         String taskText = savedLine.substring(numberSeparator + 1);
@@ -137,6 +161,9 @@ public class Storage {
 
         Task task;
         String descriptionAndTime = taskText.substring(7);
+        if (descriptionAndTime.isBlank()) {
+            throw new IOException("Invalid saved task: " + savedLine);
+        }
         switch (taskText.charAt(1)) {
             case 'T':
                 task = new Todo(descriptionAndTime);
@@ -168,6 +195,9 @@ public class Storage {
             DateFormatter.ParsedDateTime dueDateTime =
                     DateFormatter.parseDisplayedDateTime(
                             text.substring(byMarker + DEADLINE_DATE_SEPARATOR.length(), text.length() - 1));
+            if (text.substring(0, byMarker).isBlank()) {
+                throw new IOException("Invalid saved task: " + savedLine);
+            }
             return new Deadline(text.substring(0, byMarker), dueDateTime.value(), dueDateTime.hasTime());
         } catch (DateTimeParseException e) {
             throw new IOException("Invalid saved task: " + savedLine, e);
@@ -188,6 +218,10 @@ public class Storage {
             DateFormatter.ParsedDateTime endDateTime =
                     DateFormatter.parseDisplayedDateTime(
                             text.substring(toMarker + EVENT_END_SEPARATOR.length(), text.length() - 1));
+            if (text.substring(0, fromMarker).isBlank()
+                    || !startDateTime.value().isBefore(endDateTime.value())) {
+                throw new IOException("Invalid saved task: " + savedLine);
+            }
             return new Event(text.substring(0, fromMarker), startDateTime.value(), startDateTime.hasTime(),
                     endDateTime.value(), endDateTime.hasTime());
         } catch (DateTimeParseException e) {
