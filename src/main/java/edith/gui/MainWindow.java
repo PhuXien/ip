@@ -10,6 +10,26 @@ import javafx.scene.layout.VBox;
 
 /** Controls the main chatbot window defined in {@code MainWindow.fxml}. */
 public class MainWindow extends AnchorPane {
+    private static final String WELCOME_MESSAGE = String.join("\n",
+            "Hello! I'm EDITH. You can use:",
+            "",
+            "Add tasks:",
+            "  • todo DESCRIPTION  [/tags #TAG...]",
+            "  • deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]",
+            "  • event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]  [/tags #TAG...]",
+            "View and manage tasks:",
+            "  • list",
+            "  • find KEYWORD",
+            "  • mark NUMBER",
+            "  • unmark NUMBER",
+            "  • delete NUMBER",
+            "Tags:",
+            "  • tag NUMBER #TAG...",
+            "  • untag NUMBER #TAG...",
+            "",
+            "Exit:",
+            "• bye - end the chat");
+
     @FXML
     private VBox dialogContainer;
     @FXML
@@ -35,7 +55,7 @@ public class MainWindow extends AnchorPane {
     public void setEdith(Edith edith) {
         this.edith = edith;
         dialogContainer.getChildren().add(
-                DialogBox.getEdithDialog("Hello! I'm EDITH.\nWhat can I do for you?"));
+                DialogBox.getEdithDialog(WELCOME_MESSAGE));
     }
 
     /** Sends nonblank input to Edith and appends both sides of the exchange. */
