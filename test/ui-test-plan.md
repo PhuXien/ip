@@ -6,10 +6,12 @@ Run `.\gradlew.bat compileJava` with Java 25 before executing this plan. Begin w
 
 ## Test case 1: Delete a task and renumber the remaining list
 
-**Aim:** Verify that deletion removes the requested task, reports the new count, and renumbers subsequent tasks.
+**Aim:** Verify that a new user sees the empty-list hint, then deletion removes the requested task,
+reports the new count, and renumbers subsequent tasks.
 
 **Inputs:**
 ```text
+list
 todo read book
 deadline return book /by 2019-12-02 1800
 event project meeting /from 2019-08-06 1400 /to 2019-08-06 1600
@@ -35,6 +37,9 @@ bye
 
 Hello! I'm EDITH.
 What can I do for you?
+____________________________________________________________
+____________________________________________________________
+No tasks yet! Use todo, deadline, or event to create a new tasks
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:

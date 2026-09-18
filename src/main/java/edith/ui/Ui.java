@@ -93,6 +93,10 @@ public class Ui {
      * @param tasks the task list to display
      */
     public void showTaskList(TaskList tasks) {
+        if (tasks.isEmpty()) {
+            output.accept("No tasks yet! Use todo, deadline, or event to create a new tasks");
+            return;
+        }
         output.accept("Here are the tasks in your list:");
         showNumberedTasks(tasks);
     }
