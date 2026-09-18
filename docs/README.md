@@ -1,35 +1,94 @@
 # Edith User Guide
 
-Edith helps you keep a simple task list through a chat window. Type a command in the input box and press **Enter** or click **Send**. Your tasks are saved automatically and restored the next time you start Edith.
+Edith is a task chatbot. Tell it what you need to do, give tasks dates or tags, and find them again later. Edith saves your changes automatically.
 
-![Edith chat window showing a task list and example commands](Ui.png.png)
+![Edith's chat window showing a task list and example commands](Ui.png)
 
-## Start Edith
+- [Quick start](#quick-start)
+- [Features](#features)
+- [Saving and troubleshooting](#saving-and-troubleshooting)
+- [Command summary](#command-summary)
 
-Install **JDK 25**, open this project in IntelliJ, and run `gradlew.bat run` in its terminal (Windows). On macOS or Linux, run `./gradlew run`. You can also run the `edith.gui.Launcher` class in IntelliJ. See the [project README](../README.md) for IntelliJ setup.
+## Quick start
 
-## Commands at a glance
+1. Install **JDK 25** and open this project in IntelliJ. See the [project README](../README.md) for setup steps.
+2. In the IntelliJ terminal, run `gradlew.bat run` on Windows or `./gradlew run` on macOS or Linux. The **EDITH** chat window opens. You can also run `edith.gui.Launcher` from IntelliJ.
+3. Type a command in the box and press **Enter** or click **Send**. Try `todo read book`, then `list` to see your task.
 
-Replace words in CAPITALS with your own text. Square brackets show optional parts; do not type the brackets.
+## Features
 
-| What you want to do | Command | Example |
+In the formats below, replace `UPPER_CASE` words with your own text. Square brackets mean optional input; do not type the brackets. `NUMBER` is the task's position in the full `list`, starting at 1.
+
+Dates use `yyyy-MM-dd`, such as `2026-09-20`. Add an optional 24-hour time in `HHmm` format, such as `2026-09-20 1800`.
+
+### Adding a todo: `todo`
+
+Add a task without a date. Format: `todo DESCRIPTION [/tags #TAG...]`
+
+Example: `todo read book /tags #fun`
+
+Edith adds an unfinished task such as `[T][ ] read book [tags: #fun]`.
+
+### Adding a deadline: `deadline`
+
+Add a task due on a date, optionally at a time. Format: `deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]`
+
+Example: `deadline submit report /by 2026-09-20 1800 /tags #school`
+
+### Adding an event: `event`
+
+Add an event with a start and end. Format: `event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG...]`
+
+Example: `event workshop /from 2026-09-21 0900 /to 2026-09-21 1100`
+
+The end must be later than the start.
+
+### Listing tasks: `list`
+
+Type `list` to see every task in the order you added it. `[T]`, `[D]`, and `[E]` mean todo, deadline, and event. `[ ]` means unfinished; `[X]` means done.
+
+### Finding tasks: `find`
+
+Format: `find KEYWORD`
+
+`find report` searches descriptions and tags for that text, ignoring case. `find #school` searches for the **exact tag** `#school`; it does not match `#schoolwork` or a description mentioning `#school`.
+
+Search results are numbered from 1 again. To change a task you found, use its number from the full `list`, not its number in the search results.
+
+### Marking and unmarking tasks: `mark`, `unmark`
+
+Use `mark NUMBER` to finish a task or `unmark NUMBER` to make it unfinished again. For example, `mark 2` changes task 2's status to `[X]`.
+
+### Deleting a task: `delete`
+
+Use `delete NUMBER` to remove a task. For example, `delete 2` removes task 2; later tasks move up in the list.
+
+### Adding and removing tags: `tag`, `untag`
+
+Put `/tags` followed by one or more tags **at the end** of a new `todo`, `deadline`, or `event` command. For an existing task, use `tag NUMBER #TAG [#TAG ...]` or `untag NUMBER #TAG [#TAG ...]`.
+
+For example, `tag 2 #urgent #school` adds two tags to task 2; `untag 2 #urgent` removes one. Tags start with `#` and contain only letters, digits, underscores, or hyphens. Tag matching ignores case, so `#School` and `#school` are the same tag.
+
+### Ending the chat: `bye`
+
+Type `bye` to end the session. In the chat window, the input is disabled after Edith says goodbye.
+
+## Saving and troubleshooting
+
+Edith saves each change in `data/edith.txt`, relative to the directory from which you start it. Start Edith from the same directory to load those tasks again. There is no save command.
+
+If Edith cannot load the file, it tells you and prevents further changes so the file is not overwritten. Fix the file before using Edith again. Invalid commands and task numbers also produce an error message; your list is left unchanged.
+
+## Command summary
+
+| Action | Command | Example |
 | --- | --- | --- |
-| Add a task | `todo DESCRIPTION [/tags #TAG...]` | `todo read book /tags #fun` |
-| Add a task with a due date | `deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]` | `deadline submit report /by 2026-09-20 1800 /tags #school` |
-| Add an event | `event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG...]` | `event workshop /from 2026-09-21 0900 /to 2026-09-21 1100` |
-| See all tasks | `list` | `list` |
-| Search tasks | `find KEYWORD` | `find report` or `find #school` |
-| Complete or reopen a task | `mark NUMBER` / `unmark NUMBER` | `mark 2` |
-| Remove a task | `delete NUMBER` | `delete 2` |
-| Add or remove tags | `tag NUMBER #TAG...` / `untag NUMBER #TAG...` | `tag 2 #urgent #school` |
-| End the chat | `bye` | `bye` |
-
-Dates use `yyyy-MM-dd` (for example, `2026-09-20`); optional times use 24-hour `HHmm` (for example, `1800`). An event must end after it starts. Edith shows task types as `[T]` (todo), `[D]` (deadline), or `[E]` (event), followed by `[ ]` for unfinished or `[X]` for finished.
-
-Use the number shown by **`list`** for `mark`, `unmark`, `delete`, `tag`, and `untag`. `find` numbers its results separately, so run `list` before changing a task you found.
-
-Tags start with `#` and contain letters, digits, `_`, or `-`. Put `/tags` and at least one tag **at the end** of a new task command. For an existing task, use `tag` or `untag`; no `/tags` is needed. Tag names ignore case, so `#School` and `#school` refer to the same tag.
-
-`find WORD` searches descriptions and tags without regard to case. `find #school` searches for that exact tag; it will not match `#schoolwork` or a description that merely mentions `#school`. Edith keeps tasks in their original order in search results.
-
-Your tasks are stored in `data/edith.txt` relative to the directory from which you start Edith. If Edith reports that it cannot load this file, fix the file before entering more commands; Edith will not overwrite it.
+| Add todo | `todo DESCRIPTION [/tags #TAG...]` | `todo read book` |
+| Add deadline | `deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]` | `deadline return book /by 2026-09-20` |
+| Add event | `event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG...]` | `event meeting /from 2026-09-21 0900 /to 2026-09-21 1000` |
+| List | `list` | `list` |
+| Find | `find KEYWORD` | `find #school` |
+| Mark / unmark | `mark NUMBER` / `unmark NUMBER` | `mark 2` |
+| Delete | `delete NUMBER` | `delete 2` |
+| Tag / untag | `tag NUMBER #TAG [#TAG ...]` / `untag NUMBER #TAG [#TAG ...]` | `tag 2 #urgent` |
+| End chat | `bye` | `bye` |
