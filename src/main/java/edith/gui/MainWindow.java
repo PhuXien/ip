@@ -10,25 +10,7 @@ import javafx.scene.layout.VBox;
 
 /** Controls the main chatbot window defined in {@code MainWindow.fxml}. */
 public class MainWindow extends AnchorPane {
-    private static final String WELCOME_MESSAGE = String.join("\n",
-            "Hello! I'm EDITH. You can use:",
-            "",
-            "Add tasks:",
-            "  • todo DESCRIPTION  [/tags #TAG...]",
-            "  • deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]",
-            "  • event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm]  [/tags #TAG...]",
-            "View and manage tasks:",
-            "  • list",
-            "  • find KEYWORD",
-            "  • mark NUMBER",
-            "  • unmark NUMBER",
-            "  • delete NUMBER",
-            "Tags:",
-            "  • tag NUMBER #TAG...",
-            "  • untag NUMBER #TAG...",
-            "",
-            "Exit:",
-            "• bye - end the chat");
+    private static final String WELCOME_MESSAGE = "Hello! I'm EDITH. Type 'help' to list all commands.";
 
     @FXML
     private VBox dialogContainer;

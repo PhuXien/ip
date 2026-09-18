@@ -6,11 +6,12 @@ Run `.\gradlew.bat compileJava` with Java 25 before executing this plan. Begin w
 
 ## Test case 1: Delete a task and renumber the remaining list
 
-**Aim:** Verify that a new user sees the empty-list hint, then deletion removes the requested task,
+**Aim:** Verify that help lists every command's format, a new user sees the empty-list hint, then deletion removes the requested task,
 reports the new count, and renumbers subsequent tasks.
 
 **Inputs:**
 ```text
+help
 list
 todo read book
 deadline return book /by 2019-12-02 1800
@@ -36,7 +37,27 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
+____________________________________________________________
+____________________________________________________________
+Here are the commands you can use:
+1. help
+2. todo DESCRIPTION [/tags #TAG ...]
+3. deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG ...]
+4. event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG ...]
+5. list
+6. find KEYWORD
+7. mark NUMBER
+8. unmark NUMBER
+9. delete NUMBER
+10. tag NUMBER #TAG [#TAG ...]
+11. untag NUMBER #TAG [#TAG ...]
+12. bye
+
+Notes:
+Replace UPPER_CASE words with your own text.
+Square brackets mark optional input; omit the brackets.
+NUMBER is the task's position in the full list, starting at 1.
 ____________________________________________________________
 ____________________________________________________________
 No tasks yet! Use todo, deadline, or event to create a new tasks
@@ -144,7 +165,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! The description of a todo cannot be empty.
@@ -198,7 +219,7 @@ ____________________________________________________________
 OOPS!!! Please provide a word or phrase to find. Use: find KEYWORD
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! I don't know what that means. Use todo, deadline, event, list, find, mark, unmark, delete, tag, untag, or bye.
+OOPS!!! I don't know what that means. Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Bye. Hope to see you again soon!
@@ -224,7 +245,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
@@ -257,7 +278,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
@@ -296,7 +317,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -347,7 +368,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
@@ -390,7 +411,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Here are the matching tasks in your list:
@@ -448,7 +469,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! Tags must start with # and contain only letters, digits, underscores, or hyphens.
@@ -497,7 +518,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -554,7 +575,7 @@ bye
 |_____|____/___| |_| |_| |_|
 
 Hello! I'm EDITH.
-What can I do for you?
+Type 'help' to list all commands.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:

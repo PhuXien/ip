@@ -11,6 +11,7 @@ import edith.command.Command;
 import edith.command.DeleteCommand;
 import edith.command.ExitCommand;
 import edith.command.FindCommand;
+import edith.command.HelpCommand;
 import edith.command.ListCommand;
 import edith.command.MarkCommand;
 import edith.command.TagCommand;
@@ -57,11 +58,11 @@ public class Parser {
         command = command.trim();
         CommandType commandType = CommandType.fromInput(command);
         if (commandType == null) {
-            throw new EdithException("I don't know what that means. Use todo, deadline, event, list, find, "
-                    + "mark, unmark, delete, tag, untag, or bye.");
+            throw new EdithException("I don't know what that means. Type 'help' to list all commands.");
         }
 
         return switch (commandType) {
+            case HELP -> new HelpCommand();
             case BYE -> new ExitCommand();
             case LIST -> new ListCommand();
             case FIND -> new FindCommand(parseFindKeyword(command));

@@ -10,6 +10,7 @@ import edith.command.AddCommand;
 import edith.command.DeleteCommand;
 import edith.command.ExitCommand;
 import edith.command.FindCommand;
+import edith.command.HelpCommand;
 import edith.command.ListCommand;
 import edith.command.MarkCommand;
 import edith.command.TagCommand;
@@ -40,6 +41,7 @@ public class ParserTest {
     }
     @Test
     public void parse_validCommands_returnsExpectedCommandTypes() throws EdithException {
+        assertInstanceOf(HelpCommand.class, Parser.parse(" help "));
         assertInstanceOf(AddCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(AddCommand.class, Parser.parse("deadline submit work /by 2026-09-06"));
         assertInstanceOf(AddCommand.class,
@@ -58,8 +60,7 @@ public class ParserTest {
     public void parse_unknownCommand_exceptionThrown() {
         EdithException exception = assertThrows(EdithException.class, () -> Parser.parse("remind me"));
 
-        assertEquals("I don't know what that means. Use todo, deadline, event, list, find, "
-                        + "mark, unmark, delete, tag, untag, or bye.",
+        assertEquals("I don't know what that means. Type 'help' to list all commands.",
                 exception.getMessage());
     }
 

@@ -59,8 +59,31 @@ public class Ui {
                 | |___| |_| | |  | | |  _  |
                 |_____|____/___| |_| |_| |_|
                 """;
-        showLines(banner, "Hello! I'm EDITH.", "What can I do for you?");
+        showLines(banner, "Hello! I'm EDITH.", "Type 'help' to list all commands.");
         showDivider();
+    }
+
+    /** Displays every command and its input format as a numbered list. */
+    public void showHelp() {
+        showLines(
+                "Here are the commands you can use:",
+                "1. help",
+                "2. todo DESCRIPTION [/tags #TAG ...]",
+                "3. deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG ...]",
+                "4. event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG ...]",
+                "5. list",
+                "6. find KEYWORD",
+                "7. mark NUMBER",
+                "8. unmark NUMBER",
+                "9. delete NUMBER",
+                "10. tag NUMBER #TAG [#TAG ...]",
+                "11. untag NUMBER #TAG [#TAG ...]",
+                "12. bye",
+                "",
+                "Notes:",
+                "Replace UPPER_CASE words with your own text.",
+                "Square brackets mark optional input; omit the brackets.",
+                "NUMBER is the task's position in the full list, starting at 1.");
     }
 
     /** Displays the divider between command interactions. */

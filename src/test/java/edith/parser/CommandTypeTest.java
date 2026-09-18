@@ -31,6 +31,7 @@ public class CommandTypeTest {
     @Test
     public void fromInput_noArgumentCommandWithArguments_returnsNull() {
         assertNull(CommandType.fromInput("list now"));
+        assertNull(CommandType.fromInput("help now"));
         assertNull(CommandType.fromInput("bye now"));
     }
 

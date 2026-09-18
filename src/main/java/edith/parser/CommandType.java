@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 /** Represents the commands understood by Edith. */
 public enum CommandType {
+    /** Displays the available commands and their formats. */
+    HELP("help", false),
     /** Adds a task without a date or time. */
     TODO("todo", true),
     /** Adds a task with a due date and optional time. */
