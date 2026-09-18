@@ -12,20 +12,21 @@ Edith is a task chatbot. Tell it what you need to do, give tasks dates or tags, 
 ## Quick start
 
 1. Make sure you have **Java 25** installed. Check by running `java -version` in a terminal.
-2. [Download or clone this project](https://github.com/PhuXien/ip), then open a terminal in its folder.
-3. Build the runnable JAR with `gradlew.bat shadowJar` on Windows or `./gradlew shadowJar` on macOS or Linux. You will find `edith.jar` in `build/libs`.
-4. Copy `edith.jar` into an empty folder. Edith saves tasks in a `data` folder inside the folder you start it from. Open a terminal there and run:
+2. Download the latest `edith.jar` from the [releases page](https://github.com/PhuXien/ip/releases).
+3. Put `edith.jar` in an empty folder. Edith saves your tasks in a `data` folder inside the folder you start it from.
+4. Open a terminal in that folder and run:
 
    ```text
    java -jar edith.jar
    ```
 
-   The **EDITH** chat window opens and greets you.
+   The chat window opens and Edith greets you.
 5. Type a command in the box at the bottom and press **Enter**, or click **Send**. Try these to get started:
+   - `help` lists all the commands
    - `todo read book` adds a task.
    - `list` shows every task.
    - `mark 1` marks your first task as done.
-   - `bye` ends the chat.
+   - `bye` closes Edith.
 
 ## Features
 
