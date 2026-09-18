@@ -1,90 +1,35 @@
 # Edith User Guide
 
-// Update the title above to match the actual product name
+Edith helps you keep a simple task list through a chat window. Type a command in the input box and press **Enter** or click **Send**. Your tasks are saved automatically and restored the next time you start Edith.
 
-// Product screenshot goes here
+![Edith chat window showing a task list and example commands](Ui.png.png)
 
-// Product intro goes here
+## Start Edith
 
-## Adding tags when creating tasks
+Install **JDK 25**, open this project in IntelliJ, and run `gradlew.bat run` in its terminal (Windows). On macOS or Linux, run `./gradlew run`. You can also run the `edith.gui.Launcher` class in IntelliJ. See the [project README](../README.md) for IntelliJ setup.
 
-Add one or more tags at the end of a task command with `/tags`. A tag starts with `#` and contains
-letters, digits, underscores, or hyphens. Tag names are compared without regard to case; Edith keeps
-the spelling used when a tag is first added. Tags appear after any date details.
+## Commands at a glance
 
-Examples:
+Replace words in CAPITALS with your own text. Square brackets show optional parts; do not type the brackets.
 
-```text
-todo read book /tags #fun #school
-deadline submit work /by 2026-09-20 /tags #school
-event meeting /from 2026-09-20 /to 2026-09-21 /tags #team
-```
+| What you want to do | Command | Example |
+| --- | --- | --- |
+| Add a task | `todo DESCRIPTION [/tags #TAG...]` | `todo read book /tags #fun` |
+| Add a task with a due date | `deadline DESCRIPTION /by yyyy-MM-dd [HHmm] [/tags #TAG...]` | `deadline submit report /by 2026-09-20 1800 /tags #school` |
+| Add an event | `event DESCRIPTION /from yyyy-MM-dd [HHmm] /to yyyy-MM-dd [HHmm] [/tags #TAG...]` | `event workshop /from 2026-09-21 0900 /to 2026-09-21 1100` |
+| See all tasks | `list` | `list` |
+| Search tasks | `find KEYWORD` | `find report` or `find #school` |
+| Complete or reopen a task | `mark NUMBER` / `unmark NUMBER` | `mark 2` |
+| Remove a task | `delete NUMBER` | `delete 2` |
+| Add or remove tags | `tag NUMBER #TAG...` / `untag NUMBER #TAG...` | `tag 2 #urgent #school` |
+| End the chat | `bye` | `bye` |
 
-For the first example, Edith replies:
+Dates use `yyyy-MM-dd` (for example, `2026-09-20`); optional times use 24-hour `HHmm` (for example, `1800`). An event must end after it starts. Edith shows task types as `[T]` (todo), `[D]` (deadline), or `[E]` (event), followed by `[ ]` for unfinished or `[X]` for finished.
 
-```text
-Got it. I've added this task:
-  [T][ ] read book [tags: #fun #school]
-Now you have 1 tasks in the list.
-```
+Use the number shown by **`list`** for `mark`, `unmark`, `delete`, `tag`, and `untag`. `find` numbers its results separately, so run `list` before changing a task you found.
 
-The `/tags` marker is optional and must come after the task description and any dates. For example,
-`todo read #fun` creates an untagged task whose description includes `#fun`.
+Tags start with `#` and contain letters, digits, `_`, or `-`. Put `/tags` and at least one tag **at the end** of a new task command. For an existing task, use `tag` or `untag`; no `/tags` is needed. Tag names ignore case, so `#School` and `#school` refer to the same tag.
 
-## Changing tags on existing tasks
+`find WORD` searches descriptions and tags without regard to case. `find #school` searches for that exact tag; it will not match `#schoolwork` or a description that merely mentions `#school`. Edith keeps tasks in their original order in search results.
 
-Use `tag NUMBER #tag [#tag ...]` to add tags or `untag NUMBER #tag [#tag ...]` to remove them.
-`NUMBER` is the task's position in the full `list`, even after a `find` result shows different numbers.
-Edith skips tags that are already present when adding and tags that are absent when removing.
-
-For example, if task 2 is `[T][ ] read book [tags: #fun]`, entering `tag 2 #Fun #school` gives:
-
-```text
-Got it. I've added tags to this task:
-  [T][ ] read book [tags: #fun #school]
-```
-
-Entering `untag 2 #fun #missing` then gives:
-
-```text
-Noted. I've removed tags from this task:
-  [T][ ] read book [tags: #school]
-```
-
-When every requested tag is already present or absent, Edith reports that no tags changed.
-All tags in a command must be valid before Edith changes the task.
-
-## Finding tagged tasks
-
-Use `find #tag` to find tasks with that exact tag, regardless of letter case. For example,
-`find #fun` matches a task tagged `#Fun`, but does not match `#funny` or a description that
-merely contains `#fun`.
-
-Other nonempty searches look for the text in task descriptions and individual tags, without
-regard to case. For example, `find fun` can match a description containing `fun` and tasks
-tagged `#fun` or `#funny`. A query such as `find #fun party` searches for that whole phrase
-in descriptions and tags because the full query is not a valid tag. Matches appear in their
-original order, numbered from 1 within the results.
-
-## Adding deadlines
-
-// Describe the action and its outcome.
-
-// Give examples of usage
-
-Example: `keyword (optional arguments)`
-
-// A description of the expected outcome goes here
-
-```
-expected output
-```
-
-## Feature ABC
-
-// Feature details
-
-
-## Feature XYZ
-
-// Feature details
+Your tasks are stored in `data/edith.txt` relative to the directory from which you start Edith. If Edith reports that it cannot load this file, fix the file before entering more commands; Edith will not overwrite it.
